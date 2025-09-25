@@ -32,14 +32,15 @@ brew install --cask audiokeeper
 
 ### Option 2: Manual Download
 1. Download from [GitHub Releases](https://github.com/rekruizer/AudioKeeper/releases)
-2. Open DMG and drag to Applications
-3. **Right-click** AudioKeeper.app → **"Open"** → **"Open"** (bypasses security warning)
-4. **Remove quarantine** (required):
+2. **If DMG won't open**: Right-click DMG → "Open" → "Open" (bypasses security warning)
+3. Open DMG and drag AudioKeeper.app to Applications
+4. **If app won't launch**: Right-click AudioKeeper.app → "Open" → "Open"
+5. **Remove quarantine** (recommended):
    ```bash
    sudo xattr -d com.apple.quarantine /Applications/AudioKeeper.app
    ```
 
-> **Note:** macOS may show a security warning. This is normal for unsigned apps. The quarantine removal step is required for the app to work properly.
+> **Security Note:** macOS shows warnings for unsigned apps. This is normal and safe. AudioKeeper is open-source and malware-free.
 
 ## 🛠️ Development
 

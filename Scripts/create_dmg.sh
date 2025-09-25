@@ -36,6 +36,13 @@ Installation:
 2. Launch AudioKeeper from Applications or Spotlight
 3. Look for the headphone icon in your menu bar
 
+IMPORTANT - Security Warning:
+If macOS shows a security warning:
+1. Right-click AudioKeeper.app → "Open" → "Open"
+2. Or run: sudo xattr -d com.apple.quarantine /Applications/AudioKeeper.app
+
+This is normal for unsigned apps. AudioKeeper is safe to use.
+
 For more information, visit:
 https://github.com/rekruizer/AudioKeeper
 EOF
@@ -48,15 +55,9 @@ if [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_CERTIFICATE_PASSWORD" ]; then
     echo "🔐 Signing DMG with Developer ID..."
     codesign --force --sign "Developer ID Application" "$DMG_NAME"
 else
-    echo "🔐 Signing DMG with ad-hoc certificate..."
-    codesign --force --sign "-" "$DMG_NAME"
-    
-    # Remove quarantine attribute to allow execution
-    xattr -d com.apple.quarantine "$DMG_NAME" 2>/dev/null || true
-    
-    # Add extended attributes to allow execution
-    xattr -c "$DMG_NAME" 2>/dev/null || true
-    xattr -w com.apple.quarantine "0081;$(date +%s);AudioKeeper;|com.apple.quarantine" "$DMG_NAME" 2>/dev/null || true
+    echo "🔐 DMG created without signing (ad-hoc mode)..."
+    # Don't sign DMG at all - let macOS handle it naturally
+    # This is how it worked in earlier versions
 fi
 
 # Clean up temporary files
