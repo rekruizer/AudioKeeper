@@ -5,6 +5,11 @@ echo "🔨 Building AudioKeeper release version..."
 # Navigate to project root
 cd "$(dirname "$0")/.."
 
+# Disable automatic log file generation
+export XCODE_BUILD_DISABLE_DUPLICATE_OUTPUT_WARNINGS=1
+export ENABLE_LOGGING=NO
+export ENABLE_LOGGING_FOR_DEBUGGING=NO
+
 # Clean previous builds
 rm -rf build/
 rm -rf AudioKeeper.app
@@ -19,6 +24,7 @@ xcodebuild -project AudioKeeper.xcodeproj \
            CODE_SIGN_STYLE=Automatic \
            ENABLE_LOGGING=NO \
            ENABLE_LOGGING_FOR_DEBUGGING=NO \
+           XCODE_BUILD_DISABLE_DUPLICATE_OUTPUT_WARNINGS=YES \
            clean build
 
 # Check build success
