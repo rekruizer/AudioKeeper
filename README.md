@@ -36,7 +36,11 @@ brew install --cask audiokeeper
 
 ### Option 3: Terminal
 ```bash
-# After installing, run this command:
+# Download and install via terminal
+curl -L -o AudioKeeper.dmg "https://github.com/rekruizer/AudioKeeper/releases/latest/download/AudioKeeper-v1.0.17.dmg"
+hdiutil attach AudioKeeper.dmg
+cp -R /Volumes/AudioKeeper*/AudioKeeper.app /Applications/
+hdiutil detach /Volumes/AudioKeeper*
 sudo xattr -d com.apple.quarantine /Applications/AudioKeeper.app
 ```
 
