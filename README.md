@@ -71,19 +71,18 @@ open AudioKeeper.xcodeproj
 
 ```
 AudioKeeper/
-├── AudioKeeper/              # Main application
-│   ├── Sources/             # Swift source code
-│   │   ├── App/            # Main app files
-│   │   ├── Audio/          # Audio device management
-│   │   └── Models/         # Data models
-│   ├── Assets.xcassets/     # App icons and resources
-│   ├── Scripts/            # Build and distribution scripts
-│   ├── Documentation/      # Detailed documentation
-│   ├── README.md          # English documentation
-│   └── README_RU.md       # Russian documentation
-├── AudioKeeper.xcodeproj   # Xcode project file
-├── LICENSE                 # MIT License
-└── README.md              # This file
+├── Sources/                # Swift source code
+│   ├── App/               # Main app files
+│   ├── Audio/             # Audio device management
+│   └── Models/            # Data models
+├── Assets.xcassets/        # App icons and resources
+├── Scripts/               # Build and distribution scripts
+├── Documentation/         # Detailed documentation
+├── AudioKeeper.xcodeproj  # Xcode project file
+├── Info.plist            # App configuration
+├── README.md             # English documentation
+├── README_RU.md          # Russian documentation
+└── LICENSE               # MIT License
 ```
 
 ## 🛠️ Development
@@ -100,7 +99,7 @@ open AudioKeeper.xcodeproj
 # Press Cmd + R in Xcode
 
 # Release build
-cd AudioKeeper/Scripts
+cd Scripts
 ./build_release.sh
 ```
 
@@ -113,18 +112,18 @@ cd AudioKeeper/Scripts
 ### Distribution
 ```bash
 # Create DMG installer
-cd AudioKeeper/Scripts
+cd Scripts
 ./create_dmg.sh
 ```
 
 ## 📚 Documentation
 
-- [📖 English Documentation](AudioKeeper/README.md)
-- [📖 Russian Documentation](AudioKeeper/README_RU.md)
-- [🚀 Quick Start Guide](AudioKeeper/Documentation/QUICK_START.md)
-- [📦 Distribution Guide](AudioKeeper/Documentation/FINAL_SETUP_GUIDE.md)
-- [🏗️ Project Structure](AudioKeeper/Documentation/PROJECT_STRUCTURE.md)
-- [⚙️ Menu Bar Setup](AudioKeeper/Documentation/MENUBAR_SETUP.md)
+- [📖 English Documentation](README.md)
+- [📖 Russian Documentation](README_RU.md)
+- [🚀 Quick Start Guide](Documentation/QUICK_START.md)
+- [📦 Distribution Guide](Documentation/FINAL_SETUP_GUIDE.md)
+- [🏗️ Project Structure](Documentation/PROJECT_STRUCTURE.md)
+- [⚙️ Menu Bar Setup](Documentation/MENUBAR_SETUP.md)
 
 ## 🔧 How It Works
 

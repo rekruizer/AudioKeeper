@@ -21,13 +21,11 @@ jobs:
         
     - name: Build Release
       run: |
-        cd AudioKeeper
         chmod +x Scripts/build_release.sh
         ./Scripts/build_release.sh
         
     - name: Create DMG
       run: |
-        cd AudioKeeper
         chmod +x Scripts/create_dmg.sh
         ./Scripts/create_dmg.sh
         
@@ -35,13 +33,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: AudioKeeper-DMG
-        path: AudioKeeper/*.dmg
+        path: *.dmg
         
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: AudioKeeper/*.dmg
+        files: *.dmg
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

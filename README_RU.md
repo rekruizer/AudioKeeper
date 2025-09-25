@@ -101,25 +101,30 @@ AudioKeeper использует CoreAudio API для:
 2. **Настройте подпись кода** в Xcode
 3. **Соберите релизную версию**:
    ```bash
-   ./Scripts/build_release.sh
+   cd Scripts
+   ./build_release.sh
    ```
 4. **Создайте DMG установщик** (опционально):
    ```bash
-   ./Scripts/create_dmg.sh
+   cd Scripts
+   ./create_dmg.sh
    ```
 
 ## Структура проекта
 
 ```
 AudioKeeper/
-├── Sources/
-│   ├── App/           # Основные файлы приложения
-│   ├── Audio/         # Управление аудиоустройствами
-│   └── Models/        # Модели данных и настройки
-├── Assets.xcassets/   # Иконки и ресурсы приложения
-├── Documentation/     # Файлы документации
-├── Scripts/          # Скрипты сборки и распространения
-└── Info.plist        # Конфигурация приложения
+├── Sources/           # Исходный код Swift
+│   ├── App/          # Основные файлы приложения
+│   ├── Audio/        # Управление аудиоустройствами
+│   └── Models/       # Модели данных и настройки
+├── Assets.xcassets/  # Иконки и ресурсы приложения
+├── Documentation/    # Файлы документации
+├── Scripts/         # Скрипты сборки и распространения
+├── AudioKeeper.xcodeproj  # Файл проекта Xcode
+├── Info.plist       # Конфигурация приложения
+├── README.md        # Английская документация
+└── README_RU.md     # Русская документация
 ```
 
 ## Разработка
