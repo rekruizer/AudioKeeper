@@ -20,16 +20,40 @@ A professional macOS menu bar application that automatically maintains your pref
 ## 🚀 Quick Start
 
 ### For Users
-1. **Download** the latest release
+1. **Download** the latest release from [GitHub Releases](https://github.com/rekruizer/AudioKeeper/releases)
 2. **Install** AudioKeeper.app to Applications
 3. **Launch** and find the headphone icon in your menu bar
 4. **Configure** your preferred input/output devices
 5. **Enjoy** automatic audio device management!
 
+[![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge&logo=github)](https://github.com/rekruizer/AudioKeeper/releases/latest)
+
+#### ⚠️ Installation without Developer Certificate
+
+Since this app is not signed with an Apple Developer Certificate, you'll need to allow it to run:
+
+**Method 1: Right-click method (Recommended)**
+1. Download the DMG from [Releases](https://github.com/rekruizer/AudioKeeper/releases)
+2. Open the DMG and drag AudioKeeper.app to Applications
+3. **Right-click** on AudioKeeper.app in Applications
+4. Select **"Open"** from the context menu
+5. Click **"Open"** in the security dialog
+
+**Method 2: Terminal method**
+```bash
+# After installing the app, run this command:
+sudo xattr -d com.apple.quarantine /Applications/AudioKeeper.app
+```
+
+**Method 3: System Preferences**
+1. Go to **System Preferences** → **Security & Privacy**
+2. Click **"Allow Anyway"** next to the blocked app message
+3. Try opening the app again
+
 ### For Developers
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/AudioKeeper.git
+git clone https://github.com/rekruizer/AudioKeeper.git
 cd AudioKeeper
 
 # Open in Xcode
@@ -134,9 +158,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [Open an issue](https://github.com/yourusername/AudioKeeper/issues)
-- 💡 **Feature Requests**: [Open an issue](https://github.com/yourusername/AudioKeeper/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/AudioKeeper/discussions)
+- 🐛 **Bug Reports**: [Open an issue](https://github.com/rekruizer/AudioKeeper/issues)
+- 💡 **Feature Requests**: [Open an issue](https://github.com/rekruizer/AudioKeeper/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/rekruizer/AudioKeeper/discussions)
 
 ---
 
@@ -144,6 +168,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ for macOS audio enthusiasts**
 
-[⭐ Star this repo](https://github.com/yourusername/AudioKeeper) • [🐛 Report Bug](https://github.com/yourusername/AudioKeeper/issues) • [💡 Request Feature](https://github.com/yourusername/AudioKeeper/issues)
+[⭐ Star this repo](https://github.com/rekruizer/AudioKeeper) • [🐛 Report Bug](https://github.com/rekruizer/AudioKeeper/issues) • [💡 Request Feature](https://github.com/rekruizer/AudioKeeper/issues)
 
 </div>
