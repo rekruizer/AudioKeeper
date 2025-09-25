@@ -56,7 +56,7 @@ if [ $? -eq 0 ]; then
     
     # Code sign the app (if certificates are available)
     if [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_CERTIFICATE_PASSWORD" ]; then
-        echo "🔐 Code signing app..."
+        echo "🔐 Code signing app with Developer ID..."
         
         # Create temporary keychain
         security create-keychain -p "" build.keychain
@@ -74,7 +74,13 @@ if [ $? -eq 0 ]; then
         rm certificate.p12
         security delete-keychain build.keychain
     else
-        echo "⚠️  Skipping code signing (no certificates provided)"
+        echo "🔐 Code signing app with ad-hoc certificate..."
+        
+        # Sign with ad-hoc certificate (no real certificate needed)
+        codesign --force --sign "-" AudioKeeper.app
+        
+        # Remove quarantine attribute to allow execution
+        xattr -d com.apple.quarantine AudioKeeper.app 2>/dev/null || true
     fi
     
     echo "📦 App ready: AudioKeeper.app"

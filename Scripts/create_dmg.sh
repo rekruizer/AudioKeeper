@@ -45,8 +45,14 @@ hdiutil create -volname "$VOLUME_NAME" -srcfolder "$TEMP_DIR" -ov -format UDZO "
 
 # Sign DMG if certificate is available
 if [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_CERTIFICATE_PASSWORD" ]; then
-    echo "🔐 Signing DMG..."
+    echo "🔐 Signing DMG with Developer ID..."
     codesign --force --sign "Developer ID Application" "$DMG_NAME"
+else
+    echo "🔐 Signing DMG with ad-hoc certificate..."
+    codesign --force --sign "-" "$DMG_NAME"
+    
+    # Remove quarantine attribute to allow execution
+    xattr -d com.apple.quarantine "$DMG_NAME" 2>/dev/null || true
 fi
 
 # Clean up temporary files
