@@ -67,7 +67,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				17D747FD2E848B5F001A632E /* AudioKeeper */,
 			);
 			name = AudioKeeper;
 			packageProductDependencies = (
