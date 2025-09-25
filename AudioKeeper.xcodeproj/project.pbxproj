@@ -10,11 +10,11 @@
 		175D8E7F2E852B5F002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		175D94B92E85350C002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		17D747FB2E848B5F001A632E /* AudioKeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		17D7480A2E848B60001A632E /* AudioKeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioKeeperApp.swift; sourceTree = "<group>"; };
-		17D7480B2E848B60001A632E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		17D7480C2E848B60001A632E /* AudioDeviceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceMonitor.swift; sourceTree = "<group>"; };
-		17D7480D2E848B60001A632E /* AudioSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSwitcher.swift; sourceTree = "<group>"; };
-		17D7480E2E848B60001A632E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		17D7480A2E848B60001A632E /* AudioKeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/App/AudioKeeperApp.swift"; sourceTree = "<group>"; };
+		17D7480B2E848B60001A632E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/App/AppDelegate.swift"; sourceTree = "<group>"; };
+		17D7480C2E848B60001A632E /* AudioDeviceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/Audio/AudioDeviceMonitor.swift"; sourceTree = "<group>"; };
+		17D7480D2E848B60001A632E /* AudioSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/Audio/AudioSwitcher.swift"; sourceTree = "<group>"; };
+		17D7480E2E848B60001A632E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/Models/Preferences.swift"; sourceTree = "<group>"; };
 		17D7480F2E848B60001A632E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17D748102E848B60001A632E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
