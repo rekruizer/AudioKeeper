@@ -18,12 +18,11 @@
 
 
 ## ✨ Features
-
-- 🎧 **Menu Bar Only** - Clean interface, no Dock clutter
-- 🔄 **Automatic Device Management** - Restores your preferred devices instantly
+Everything is simple!
+- 🔄 **Automatic Device Management** - Choose your devices, that will be kept as output/input devices. Even if something changes.
 - 💾 **Persistent Settings** - Remembers your preferences between sessions
 - ⚡ **Real-time Monitoring** - Instant response to device connections
-- 🔄 **Auto-Updates** - Automatically checks for updates weekly, one-click installation
+- 🎧 **Minimalistic** - Clean interface, no Dock clutter
 
 
 ## 📦 Installation
