@@ -71,6 +71,20 @@ AudioKeeper/
 3. Make your changes
 4. Submit a pull request
 
+## 💖 Support the Project
+
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/rekruizer)
+
+### ₿ Crypto Donations
+**Bitcoin:** `bc1q9xj5p220tqgdn7gxjhuc9uk39xyl59vj0qs89f`
+**Ethereum:** `0x89D36cA00D690f294ebEaB81276062BCd9a5E8D0`
+**USDT:** `0x89D36cA00D690f294ebEaB81276062BCd9a5E8D0`
+
+*Your support helps me continue building!* 💙
+- 🚀 Continue development and new features
+- 🐛 Fix bugs and improve stability
+- 📚 Create better documentation
+- ⚡ Keep the project maintained
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
