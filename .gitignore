@@ -89,13 +89,48 @@ fastlane/test_output
 
 iOSInjectionProject/
 
-# Distribution builds
-AudioKeeper.app
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Build artifacts
+*.app
 *.dmg
-*.pkg
+*.zip
+build/
+dmg_temp/
 
 # Temporary files
 *.tmp
 *.temp
-dmg_temp/
-build/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# Documentation that's not needed in repo
+GITHUB_SETUP_GUIDE.md
