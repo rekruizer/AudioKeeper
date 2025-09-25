@@ -10,7 +10,23 @@
 		175D8E7F2E852B5F002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		175D94B92E85350C002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		17D747FB2E848B5F001A632E /* AudioKeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		17D7480A2E848B60001A632E /* AudioKeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioKeeperApp.swift; sourceTree = "<group>"; };
+		17D7480B2E848B60001A632E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		17D7480C2E848B60001A632E /* AudioDeviceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceMonitor.swift; sourceTree = "<group>"; };
+		17D7480D2E848B60001A632E /* AudioSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSwitcher.swift; sourceTree = "<group>"; };
+		17D7480E2E848B60001A632E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		17D7480F2E848B60001A632E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		17D748102E848B60001A632E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXBuildFile section */
+		17D748112E848B60001A632E /* AudioKeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480A2E848B60001A632E /* AudioKeeperApp.swift */; };
+		17D748122E848B60001A632E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480B2E848B60001A632E /* AppDelegate.swift */; };
+		17D748132E848B60001A632E /* AudioDeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480C2E848B60001A632E /* AudioDeviceMonitor.swift */; };
+		17D748142E848B60001A632E /* AudioSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480D2E848B60001A632E /* AudioSwitcher.swift */; };
+		17D748152E848B60001A632E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480E2E848B60001A632E /* Preferences.swift */; };
+		17D748162E848B60001A632E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D748102E848B60001A632E /* Assets.xcassets */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17D747FD2E848B5F001A632E /* . */ = {
@@ -128,6 +144,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17D748162E848B60001A632E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +155,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17D748112E848B60001A632E /* AudioKeeperApp.swift in Sources */,
+				17D748122E848B60001A632E /* AppDelegate.swift in Sources */,
+				17D748132E848B60001A632E /* AudioDeviceMonitor.swift in Sources */,
+				17D748142E848B60001A632E /* AudioSwitcher.swift in Sources */,
+				17D748152E848B60001A632E /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,7 +302,8 @@
 				ENABLE_LOGGING_FOR_DEBUGGING = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AudioKeeper;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -322,7 +345,8 @@
 				ENABLE_LOGGING_FOR_DEBUGGING = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AudioKeeper;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
