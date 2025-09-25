@@ -15,8 +15,8 @@ xcodebuild -project AudioKeeper.xcodeproj \
            -scheme AudioKeeper \
            -configuration Release \
            -derivedDataPath build \
-           CODE_SIGN_IDENTITY="Developer ID Application" \
-           CODE_SIGN_STYLE=Manual \
+           CODE_SIGN_IDENTITY="" \
+           CODE_SIGN_STYLE=Automatic \
            clean build
 
 # Check build success
