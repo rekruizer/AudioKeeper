@@ -6,27 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		17D748112E848B60001A632E /* Sources/App/AudioKeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480A2E848B60001A632E /* Sources/App/AudioKeeperApp.swift */; };
+		17D748122E848B60001A632E /* Sources/App/AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480B2E848B60001A632E /* Sources/App/AppDelegate.swift */; };
+		17D748132E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480C2E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift */; };
+		17D748142E848B60001A632E /* Sources/Audio/AudioSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480D2E848B60001A632E /* Sources/Audio/AudioSwitcher.swift */; };
+		17D748152E848B60001A632E /* Sources/Models/Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480E2E848B60001A632E /* Sources/Models/Preferences.swift */; };
+		17D748162E848B60001A632E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D748102E848B60001A632E /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		175D8E7F2E852B5F002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		175D94B92E85350C002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
+		175D96342E8565FD002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		17D747FB2E848B5F001A632E /* AudioKeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		17D7480A2E848B60001A632E /* AudioKeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/App/AudioKeeperApp.swift"; sourceTree = "<group>"; };
-		17D7480B2E848B60001A632E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/App/AppDelegate.swift"; sourceTree = "<group>"; };
-		17D7480C2E848B60001A632E /* AudioDeviceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/Audio/AudioDeviceMonitor.swift"; sourceTree = "<group>"; };
-		17D7480D2E848B60001A632E /* AudioSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/Audio/AudioSwitcher.swift"; sourceTree = "<group>"; };
-		17D7480E2E848B60001A632E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sources/Models/Preferences.swift"; sourceTree = "<group>"; };
-		17D7480F2E848B60001A632E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		17D7480A2E848B60001A632E /* Sources/App/AudioKeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/App/AudioKeeperApp.swift; sourceTree = "<group>"; };
+		17D7480B2E848B60001A632E /* Sources/App/AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/App/AppDelegate.swift; sourceTree = "<group>"; };
+		17D7480C2E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Audio/AudioDeviceMonitor.swift; sourceTree = "<group>"; };
+		17D7480D2E848B60001A632E /* Sources/Audio/AudioSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Audio/AudioSwitcher.swift; sourceTree = "<group>"; };
+		17D7480E2E848B60001A632E /* Sources/Models/Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Models/Preferences.swift; sourceTree = "<group>"; };
 		17D748102E848B60001A632E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXBuildFile section */
-		17D748112E848B60001A632E /* AudioKeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480A2E848B60001A632E /* AudioKeeperApp.swift */; };
-		17D748122E848B60001A632E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480B2E848B60001A632E /* AppDelegate.swift */; };
-		17D748132E848B60001A632E /* AudioDeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480C2E848B60001A632E /* AudioDeviceMonitor.swift */; };
-		17D748142E848B60001A632E /* AudioSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480D2E848B60001A632E /* AudioSwitcher.swift */; };
-		17D748152E848B60001A632E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480E2E848B60001A632E /* Preferences.swift */; };
-		17D748162E848B60001A632E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D748102E848B60001A632E /* Assets.xcassets */; };
-/* End PBXBuildFile section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17D747FD2E848B5F001A632E /* . */ = {
@@ -57,11 +57,30 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		175D961C2E8565FD002B9E61 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				17D7480A2E848B60001A632E /* Sources/App/AudioKeeperApp.swift */,
+				17D7480B2E848B60001A632E /* Sources/App/AppDelegate.swift */,
+				17D7480C2E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift */,
+				17D7480D2E848B60001A632E /* Sources/Audio/AudioSwitcher.swift */,
+				17D7480E2E848B60001A632E /* Sources/Models/Preferences.swift */,
+				17D748102E848B60001A632E /* Assets.xcassets */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		175D963D2E8565FD002B9E61 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		17D747F22E848B5F001A632E = {
 			isa = PBXGroup;
 			children = (
 				17D747FD2E848B5F001A632E /* . */,
 				17D747FC2E848B5F001A632E /* Products */,
+				175D961C2E8565FD002B9E61 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,6 +143,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 175D963D2E8565FD002B9E61 /* Products */;
+					ProjectRef = 175D96342E8565FD002B9E61 /* AudioKeeper.xcodeproj */;
+				},
+				{
 					ProductGroup = 175D8E882E852B5F002B9E61 /* Products */;
 					ProjectRef = 175D8E7F2E852B5F002B9E61 /* AudioKeeper.xcodeproj */;
 				},
@@ -155,11 +178,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17D748112E848B60001A632E /* AudioKeeperApp.swift in Sources */,
-				17D748122E848B60001A632E /* AppDelegate.swift in Sources */,
-				17D748132E848B60001A632E /* AudioDeviceMonitor.swift in Sources */,
-				17D748142E848B60001A632E /* AudioSwitcher.swift in Sources */,
-				17D748152E848B60001A632E /* Preferences.swift in Sources */,
+				17D748112E848B60001A632E /* Sources/App/AudioKeeperApp.swift in Sources */,
+				17D748122E848B60001A632E /* Sources/App/AppDelegate.swift in Sources */,
+				17D748132E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift in Sources */,
+				17D748142E848B60001A632E /* Sources/Audio/AudioSwitcher.swift in Sources */,
+				17D748152E848B60001A632E /* Sources/Models/Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

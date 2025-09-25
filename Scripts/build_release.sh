@@ -79,8 +79,15 @@ if [ $? -eq 0 ]; then
         # Sign with ad-hoc certificate (no real certificate needed)
         codesign --force --sign "-" AudioKeeper.app
         
+        # Sign all frameworks and libraries inside the app
+        find AudioKeeper.app -name "*.framework" -exec codesign --force --sign "-" {} \;
+        find AudioKeeper.app -name "*.dylib" -exec codesign --force --sign "-" {} \;
+        
         # Remove quarantine attribute to allow execution
         xattr -d com.apple.quarantine AudioKeeper.app 2>/dev/null || true
+        
+        # Verify the signature
+        codesign --verify --verbose AudioKeeper.app
     fi
     
     echo "📦 App ready: AudioKeeper.app"
