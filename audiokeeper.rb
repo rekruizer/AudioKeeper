@@ -1,6 +1,6 @@
 cask "audiokeeper" do
-  version "1.0.16"
-  sha256 "bec9bed68ae134ff9542b2909c20225b6bfa954df1a91723e6a6ed220823b665"
+  version "1.1.2"
+  sha256 "ddab56b82afe056911099de87bca26469ea8472b6002640be7521986be97c3c4"
 
   url "https://github.com/rekruizer/AudioKeeper/releases/download/v#{version}/AudioKeeper-v#{version}.dmg"
   name "AudioKeeper"
