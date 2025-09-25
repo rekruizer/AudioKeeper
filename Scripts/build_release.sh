@@ -15,16 +15,19 @@ rm -rf build/
 rm -rf AudioKeeper.app
 rm -rf *.dmg
 
-# Build release version
+# Build release version with explicit destination
 xcodebuild -project AudioKeeper.xcodeproj \
            -scheme AudioKeeper \
            -configuration Release \
            -derivedDataPath build \
+           -destination "platform=macOS,arch=arm64" \
            CODE_SIGN_IDENTITY="" \
            CODE_SIGN_STYLE=Automatic \
            ENABLE_LOGGING=NO \
            ENABLE_LOGGING_FOR_DEBUGGING=NO \
            XCODE_BUILD_DISABLE_DUPLICATE_OUTPUT_WARNINGS=YES \
+           -allowProvisioningUpdates \
+           -skipMacroValidation \
            clean build
 
 # Check build success
