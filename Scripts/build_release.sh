@@ -17,6 +17,9 @@ xcodebuild -project AudioKeeper.xcodeproj \
            -derivedDataPath build \
            CODE_SIGN_IDENTITY="" \
            CODE_SIGN_STYLE=Automatic \
+           -allowProvisioningUpdates \
+           -destination "platform=macOS,arch=arm64" \
+           -skipMacroValidation \
            clean build
 
 # Check build success
