@@ -12,7 +12,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		17D747FD2E848B5F001A632E /* . */ = {
+		17D747FD2E848B5F001A632E /* AudioKeeper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = .;
 			sourceTree = "<group>";
@@ -38,7 +38,7 @@
 		17D747F22E848B5F001A632E = {
 			isa = PBXGroup;
 			children = (
-				17D747FD2E848B5F001A632E /* . */,
+				17D747FD2E848B5F001A632E /* AudioKeeper */,
 				17D747FC2E848B5F001A632E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,7 +67,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				17D747FD2E848B5F001A632E /* . */,
+				17D747FD2E848B5F001A632E /* AudioKeeper */,
 			);
 			name = AudioKeeper;
 			packageProductDependencies = (
