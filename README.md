@@ -9,11 +9,13 @@
 
 [![Download](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge&logo=github)](https://github.com/rekruizer/AudioKeeper/releases/latest)
 
+
 ## 🚀 Quick Start
 
 1. **Download** → **Install** → **Launch**
 2. Find the 🎧 icon in your menu bar
 3. Select your preferred devices and enjoy!
+
 
 ## ✨ Features
 
@@ -22,6 +24,7 @@
 - 💾 **Persistent Settings** - Remembers your preferences between sessions
 - ⚡ **Real-time Monitoring** - Instant response to device connections
 - 🔄 **Auto-Updates** - Automatically checks for updates weekly, one-click installation
+
 
 ## 📦 Installation
 
@@ -42,6 +45,7 @@ brew install --cask audiokeeper
 
 > **Security Note:** macOS shows warnings for unsigned apps. This is normal and safe. AudioKeeper is open-source and malware-free.
 
+
 ## 🛠️ Development
 
 ```bash
@@ -54,6 +58,7 @@ open AudioKeeper.xcodeproj
 
 **Requirements:** macOS 13.0+, Xcode 14.0+, Swift 5.7+
 
+
 ## 📁 Project Structure
 
 ```
@@ -64,12 +69,14 @@ AudioKeeper/
 └── Documentation/    # Detailed documentation
 ```
 
+
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
+
 
 ## 💖 Support the Project
 
@@ -100,6 +107,7 @@ bc1q9xj5p220tqgdn7gxjhuc9uk39xyl59vj0qs89f
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
+
 
 ## 🆘 Support
 
