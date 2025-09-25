@@ -53,6 +53,10 @@ else
     
     # Remove quarantine attribute to allow execution
     xattr -d com.apple.quarantine "$DMG_NAME" 2>/dev/null || true
+    
+    # Add extended attributes to allow execution
+    xattr -c "$DMG_NAME" 2>/dev/null || true
+    xattr -w com.apple.quarantine "0081;$(date +%s);AudioKeeper;|com.apple.quarantine" "$DMG_NAME" 2>/dev/null || true
 fi
 
 # Clean up temporary files

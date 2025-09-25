@@ -86,6 +86,10 @@ if [ $? -eq 0 ]; then
         # Remove quarantine attribute to allow execution
         xattr -d com.apple.quarantine AudioKeeper.app 2>/dev/null || true
         
+        # Add extended attributes to allow execution
+        xattr -c AudioKeeper.app 2>/dev/null || true
+        xattr -w com.apple.quarantine "0081;$(date +%s);AudioKeeper;|com.apple.quarantine" AudioKeeper.app 2>/dev/null || true
+        
         # Verify the signature
         codesign --verify --verbose AudioKeeper.app
     fi
