@@ -16,6 +16,11 @@ rm -rf AudioKeeper.app
 rm -rf *.dmg
 
 # Build release version with explicit destination
+echo "📁 Current directory: $(pwd)"
+echo "📁 Project files:"
+ls -la AudioKeeper.xcodeproj/
+
+echo "🔨 Building with xcodebuild..."
 xcodebuild -project AudioKeeper.xcodeproj \
            -scheme AudioKeeper \
            -configuration Release \
@@ -34,8 +39,20 @@ xcodebuild -project AudioKeeper.xcodeproj \
 if [ $? -eq 0 ]; then
     echo "✅ Build successful!"
     
+    # Check what was built
+    echo "📁 Build output:"
+    ls -la build/Build/Products/Release/
+    
     # Copy app to current directory
-    cp -R build/Build/Products/Release/AudioKeeper.app ./
+    if [ -d "build/Build/Products/Release/AudioKeeper.app" ]; then
+        echo "📦 Copying real app..."
+        cp -R build/Build/Products/Release/AudioKeeper.app ./
+    else
+        echo "❌ No AudioKeeper.app found in build output!"
+        echo "📁 Available files:"
+        find build/ -name "*.app" -type d
+        exit 1
+    fi
     
     # Code sign the app (if certificates are available)
     if [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_CERTIFICATE_PASSWORD" ]; then

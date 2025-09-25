@@ -28,11 +28,14 @@ A professional macOS menu bar application that automatically maintains your pref
 
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge&logo=github)](https://github.com/rekruizer/AudioKeeper/releases/latest)
 
-### Homebrew Cask (Coming Soon)
+### Homebrew Cask (⚠️ Currently Broken)
 
 ```bash
-# Install via Homebrew (when available)
-brew install --cask audiokeeper
+# ⚠️ WARNING: Homebrew installation is currently broken
+# The DMG contains a test app instead of the real application
+# Please use manual installation below until this is fixed
+
+# brew install --cask audiokeeper  # DON'T USE YET
 ```
 
 #### ⚠️ Installation without Developer Certificate
@@ -91,6 +94,17 @@ AudioKeeper/
 ├── README_RU.md          # Russian documentation
 └── LICENSE               # MIT License
 ```
+
+## ⚠️ Known Issues
+
+### Homebrew Cask Installation
+- **Problem**: DMG files contain test application instead of real app
+- **Status**: GitHub Actions build is failing to create proper app
+- **Workaround**: Use manual installation from GitHub Releases
+- **Fix**: Working on resolving Xcode build issues in CI/CD
+
+### Manual Installation Recommended
+Until the Homebrew issue is resolved, please use the manual installation method above.
 
 ## 🛠️ Development
 
