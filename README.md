@@ -28,6 +28,13 @@ A professional macOS menu bar application that automatically maintains your pref
 
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge&logo=github)](https://github.com/rekruizer/AudioKeeper/releases/latest)
 
+### Homebrew Cask (Coming Soon)
+
+```bash
+# Install via Homebrew (when available)
+brew install --cask audiokeeper
+```
+
 #### ⚠️ Installation without Developer Certificate
 
 Since this app is not signed with an Apple Developer Certificate, you'll need to allow it to run:
