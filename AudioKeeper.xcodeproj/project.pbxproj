@@ -13,7 +13,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17D747FD2E848B5F001A632E /* AudioKeeper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AudioKeeper;
+			path = ".";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
