@@ -10,6 +10,9 @@ rm -rf build/
 rm -rf AudioKeeper.app
 rm -rf *.dmg
 
+# Set environment variables to avoid duplicate file conflicts
+export XCODE_BUILD_DISABLE_DUPLICATE_OUTPUT_WARNINGS=1
+
 # Build release version
 xcodebuild -project AudioKeeper.xcodeproj \
            -scheme AudioKeeper \
@@ -20,6 +23,7 @@ xcodebuild -project AudioKeeper.xcodeproj \
            -allowProvisioningUpdates \
            -destination "platform=macOS,arch=arm64" \
            -skipMacroValidation \
+           -disableAutomaticPackageResolution \
            clean build
 
 # Check build success
