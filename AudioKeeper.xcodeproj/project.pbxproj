@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		175D8E7F2E852B5F002B9E61 /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
 		17D747FB2E848B5F001A632E /* AudioKeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		17D747FD2E848B5F001A632E /* AudioKeeper */ = {
+		17D747FD2E848B5F001A632E /* . */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ".";
+			path = .;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -29,10 +30,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		175D8E882E852B5F002B9E61 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		17D747F22E848B5F001A632E = {
 			isa = PBXGroup;
 			children = (
-				17D747FD2E848B5F001A632E /* AudioKeeper */,
+				17D747FD2E848B5F001A632E /* . */,
 				17D747FC2E848B5F001A632E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,7 +67,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				17D747FD2E848B5F001A632E /* AudioKeeper */,
+				17D747FD2E848B5F001A632E /* . */,
 			);
 			name = AudioKeeper;
 			packageProductDependencies = (
@@ -97,6 +103,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 17D747FC2E848B5F001A632E /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 175D8E882E852B5F002B9E61 /* Products */;
+					ProjectRef = 175D8E7F2E852B5F002B9E61 /* AudioKeeper.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				17D747FA2E848B5F001A632E /* AudioKeeper */,
