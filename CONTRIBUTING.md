@@ -75,7 +75,6 @@ open AudioKeeper.xcodeproj
 
 ### Required Updates
 - Update README.md for new features
-- Add Russian translation (README_RU.md)
 - Update project documentation
 - Include code comments
 

@@ -32,7 +32,7 @@ protocol AudioDeviceMonitorDelegate: AnyObject {
 
 		let systemObject = AudioObjectID(kAudioObjectSystemObject)
 
-		// Добавляем обработчики с проверкой ошибок
+			// Add handlers with error checking
 		let inputStatus = AudioObjectAddPropertyListenerBlock(systemObject, &defaultInputAddr, DispatchQueue.main) { [weak self] _, _ in
 			self?.delegate?.defaultDeviceDidChange(role: .input)
 		}

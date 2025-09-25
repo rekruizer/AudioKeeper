@@ -20,10 +20,10 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	}
 
 	func defaultDeviceDidChange(role: AudioRole) {
-		// Простая логика: если приложение активно и есть предпочтение, возвращаем к нему
+		// Simple logic: if app is active and has preference, restore it
 		guard preferences.isActive else { return }
 		
-		// Небольшая задержка для стабильности
+		// Small delay for stability
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
 			guard let self else { return }
 			
@@ -53,7 +53,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 		preferences.isActive = isActive
 		store.save(preferences)
 		
-		// При активации сразу устанавливаем предпочтения
+		// Immediately set preferences when activated
 		if isActive {
 			if let inputUID = preferences.preferredInputUID {
 				switcher.setDefaultDevice(uid: inputUID, role: .input)
@@ -68,7 +68,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 		preferences.preferredInputUID = uid
 		store.save(preferences)
 		
-		// Немедленно переключаем устройство в системе, если приложение активно
+		// Immediately switch device in system if app is active
 		if preferences.isActive, let uid = uid {
 			switcher.setDefaultDevice(uid: uid, role: .input)
 		}
@@ -78,7 +78,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 		preferences.preferredOutputUID = uid
 		store.save(preferences)
 		
-		// Немедленно переключаем устройство в системе, если приложение активно
+		// Immediately switch device in system if app is active
 		if preferences.isActive, let uid = uid {
 			switcher.setDefaultDevice(uid: uid, role: .output)
 		}
@@ -89,18 +89,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 	static let sharedState = AppState()
 	
 	func applicationDidFinishLaunching(_ notification: Notification) {
-		// Убеждаемся, что приложение полностью скрыто (не в Dock, не в Command+Tab)
+		// Ensure app is completely hidden (not in Dock, not in Command+Tab)
 		NSApp.setActivationPolicy(.prohibited)
+		
+		// Initialize UpdateManager for automatic update checks
+		_ = UpdateManager.shared
 	}
 }
 
 struct AppMenuView: View {
 	@ObservedObject var state = AppDelegate.sharedState
+	@ObservedObject var updateManager = UpdateManager.shared
+	@State private var showingUpdateDialog = false
 
 	var body: some View {
 		VStack(alignment: .leading, spacing: 6) {
-			// Переключатель активности
-			Toggle("Активно", isOn: Binding(
+			// Activity toggle
+			Toggle("Active", isOn: Binding(
 				get: { state.preferences.isActive },
 				set: { state.setActive($0) }
 			))
@@ -109,9 +114,9 @@ struct AppMenuView: View {
 
 			Divider()
 
-			// Выбор устройства ввода
+			// Input device selection
 			VStack(alignment: .leading, spacing: 2) {
-				Text("Ввод:")
+				Text("Input:")
 					.font(.caption)
 					.foregroundColor(.secondary)
 					.padding(.horizontal, 12)
@@ -120,7 +125,7 @@ struct AppMenuView: View {
 					get: { state.preferences.preferredInputUID ?? "" },
 					set: { state.setPreferredInput(uid: $0.isEmpty ? nil : $0) }
 				)) {
-					Text("Системное по умолчанию").tag("")
+					Text("System Default").tag("")
 					ForEach(state.devices.filter { $0.isInput }, id: \.uid) { device in
 						Text(device.name).tag(device.uid)
 					}
@@ -129,9 +134,9 @@ struct AppMenuView: View {
 				.padding(.horizontal, 12)
 			}
 
-			// Выбор устройства вывода
+			// Output device selection
 			VStack(alignment: .leading, spacing: 2) {
-				Text("Вывод:")
+				Text("Output:")
 					.font(.caption)
 					.foregroundColor(.secondary)
 					.padding(.horizontal, 12)
@@ -140,7 +145,7 @@ struct AppMenuView: View {
 					get: { state.preferences.preferredOutputUID ?? "" },
 					set: { state.setPreferredOutput(uid: $0.isEmpty ? nil : $0) }
 				)) {
-					Text("Системное по умолчанию").tag("")
+					Text("System Default").tag("")
 					ForEach(state.devices.filter { $0.isOutput }, id: \.uid) { device in
 						Text(device.name).tag(device.uid)
 					}
@@ -151,7 +156,55 @@ struct AppMenuView: View {
 
 			Divider()
 			
-			Button("Выход") { 
+			// Updates section
+			VStack(alignment: .leading, spacing: 4) {
+				if updateManager.isCheckingForUpdates {
+					HStack {
+						ProgressView()
+							.scaleEffect(0.7)
+						Text("Checking for updates...")
+							.font(.caption)
+							.foregroundColor(.secondary)
+					}
+					.padding(.horizontal, 12)
+				} else if let update = updateManager.updateAvailable {
+					VStack(alignment: .leading, spacing: 4) {
+						HStack {
+							Image(systemName: "arrow.down.circle.fill")
+								.foregroundColor(.blue)
+							Text("Update available v\(update.version)")
+								.font(.caption)
+								.fontWeight(.medium)
+						}
+						.padding(.horizontal, 12)
+						
+						Button("Download and Install") {
+							updateManager.downloadAndInstallUpdate()
+						}
+						.buttonStyle(.borderless)
+						.padding(.horizontal, 12)
+						.padding(.vertical, 2)
+					}
+				} else {
+					Button("Check for Updates") {
+						updateManager.checkForUpdates()
+					}
+					.buttonStyle(.borderless)
+					.padding(.horizontal, 12)
+					.padding(.vertical, 4)
+				}
+				
+				if let lastChecked = updateManager.lastCheckedDate {
+					Text("Last checked: \(formatDate(lastChecked))")
+						.font(.caption2)
+						.foregroundColor(.secondary)
+						.padding(.horizontal, 12)
+				}
+			}
+			
+			Divider()
+			
+			Button("Quit") { 
 				NSApp.terminate(nil) 
 			}
 			.padding(.horizontal, 12)
@@ -159,5 +212,12 @@ struct AppMenuView: View {
 		}
 		.padding(.vertical, 8)
 		.frame(minWidth: 200)
+	}
+	
+	private func formatDate(_ date: Date) -> String {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .short
+		formatter.timeStyle = .short
+		return formatter.string(from: date)
 	}
 }

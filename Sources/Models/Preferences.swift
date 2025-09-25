@@ -4,6 +4,8 @@ struct Preferences: Codable, Equatable {
 	var isActive: Bool
 	var preferredInputUID: String?
 	var preferredOutputUID: String?
+	var lastUpdateCheck: Date?
+	var updateCheckFrequency: TimeInterval = 604800 // 7 days in seconds
 }
 
 final class PreferencesStore {
@@ -20,7 +22,7 @@ final class PreferencesStore {
 		   let prefs = try? JSONDecoder().decode(Preferences.self, from: data) {
 			return prefs
 		}
-		return Preferences(isActive: true, preferredInputUID: currentInputUID, preferredOutputUID: currentOutputUID)
+		return Preferences(isActive: true, preferredInputUID: currentInputUID, preferredOutputUID: currentOutputUID, lastUpdateCheck: nil, updateCheckFrequency: 604800)
 	}
 
 	func save(_ prefs: Preferences) {

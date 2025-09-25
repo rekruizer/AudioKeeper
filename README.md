@@ -21,6 +21,7 @@
 - 🔄 **Automatic Device Management** - Restores your preferred devices instantly
 - 💾 **Persistent Settings** - Remembers your preferences between sessions
 - ⚡ **Real-time Monitoring** - Instant response to device connections
+- 🔄 **Auto-Updates** - Automatically checks for updates weekly, one-click installation
 
 ## 📦 Installation
 

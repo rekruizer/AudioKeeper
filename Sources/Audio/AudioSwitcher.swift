@@ -41,7 +41,7 @@ final class AudioSwitcher {
 		}
 
 		return deviceIDs.compactMap { deviceID in
-			// Пропускаем "пустые" устройства и проверяем валидность
+			// Skip "empty" devices and check validity
 			guard deviceID != 0, isValidDevice(deviceID) else { return nil }
 			
 			guard let uid = getString(deviceID: deviceID, selector: kAudioDevicePropertyDeviceUID) else { return nil }
@@ -49,7 +49,7 @@ final class AudioSwitcher {
 			let hasInput = streamDirectionExists(deviceID: deviceID, scope: kAudioDevicePropertyScopeInput)
 			let hasOutput = streamDirectionExists(deviceID: deviceID, scope: kAudioDevicePropertyScopeOutput)
 			
-			// Возвращаем только устройства с хотя бы одним направлением (input или output)
+					// Return only devices with at least one direction (input or output)
 			guard hasInput || hasOutput else { return nil }
 			
 			return AudioDeviceInfo(uid: uid, name: name, isInput: hasInput, isOutput: hasOutput)
@@ -106,7 +106,7 @@ final class AudioSwitcher {
 		}
 		
 		for id in ids {
-			// Проверяем, что устройство действительно существует и доступно
+					// Check that device actually exists and is available
 			if isValidDevice(id) {
 				if let deviceUID = getString(deviceID: id, selector: kAudioDevicePropertyDeviceUID),
 				   deviceUID == uid {
@@ -118,7 +118,7 @@ final class AudioSwitcher {
 	}
 	
 	private func isValidDevice(_ deviceID: AudioDeviceID) -> Bool {
-		// Проверяем, что устройство доступно и не является "пустым"
+		// Check that device is available and not "empty"
 		var address = AudioObjectPropertyAddress(
 			mSelector: kAudioDevicePropertyDeviceUID,
 			mScope: kAudioObjectPropertyScopeGlobal,
@@ -134,7 +134,7 @@ final class AudioSwitcher {
 		var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
 		var dataSize: UInt32 = 0
 		guard AudioObjectGetPropertyDataSize(deviceID, &address, 0, nil, &dataSize) == noErr else { return nil }
-		var cfStr = "" as CFString
+		let cfStr = "" as CFString
 		var s = cfStr
 		let status = AudioObjectGetPropertyData(deviceID, &address, 0, nil, &dataSize, &s)
 		guard status == noErr else { return nil }

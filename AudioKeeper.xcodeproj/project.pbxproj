@@ -13,6 +13,7 @@
 		17D748142E848B60001A632E /* Sources/Audio/AudioSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480D2E848B60001A632E /* Sources/Audio/AudioSwitcher.swift */; };
 		17D748152E848B60001A632E /* Sources/Models/Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7480E2E848B60001A632E /* Sources/Models/Preferences.swift */; };
 		17D748162E848B60001A632E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D748102E848B60001A632E /* Assets.xcassets */; };
+		FF1343C093CA45B68545C92E6600CE54 /* Sources/App/UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3159BD75C24F029019D80B73004D4A /* Sources/App/UpdateManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,9 @@
 		17D7480D2E848B60001A632E /* Sources/Audio/AudioSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Audio/AudioSwitcher.swift; sourceTree = "<group>"; };
 		17D7480E2E848B60001A632E /* Sources/Models/Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Models/Preferences.swift; sourceTree = "<group>"; };
 		17D748102E848B60001A632E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E0E960C19B9C4A82A5E63AF334DC3215 /* AudioKeeper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AudioKeeper.entitlements; sourceTree = "<group>"; };
+		17FD7B242E857853007C99CD /* AudioKeeper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AudioKeeper.xcodeproj; sourceTree = "<group>"; };
+		AC3159BD75C24F029019D80B73004D4A /* Sources/App/UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/App/UpdateManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -62,10 +66,12 @@
 			children = (
 				17D7480A2E848B60001A632E /* Sources/App/AudioKeeperApp.swift */,
 				17D7480B2E848B60001A632E /* Sources/App/AppDelegate.swift */,
+				AC3159BD75C24F029019D80B73004D4A /* Sources/App/UpdateManager.swift */,
 				17D7480C2E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift */,
 				17D7480D2E848B60001A632E /* Sources/Audio/AudioSwitcher.swift */,
 				17D7480E2E848B60001A632E /* Sources/Models/Preferences.swift */,
 				17D748102E848B60001A632E /* Assets.xcassets */,
+				E0E960C19B9C4A82A5E63AF334DC3215 /* AudioKeeper.entitlements */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -89,6 +95,11 @@
 			children = (
 				17D747FB2E848B5F001A632E /* AudioKeeper.app */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		17FD7B2B2E857853007C99CD /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -154,6 +165,10 @@
 					ProductGroup = 175D94C12E85350C002B9E61 /* Products */;
 					ProjectRef = 175D94B92E85350C002B9E61 /* AudioKeeper.xcodeproj */;
 				},
+				{
+					ProductGroup = 17FD7B2B2E857853007C99CD /* Products */;
+					ProjectRef = 17FD7B242E857853007C99CD /* AudioKeeper.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -180,6 +195,7 @@
 			files = (
 				17D748112E848B60001A632E /* Sources/App/AudioKeeperApp.swift in Sources */,
 				17D748122E848B60001A632E /* Sources/App/AppDelegate.swift in Sources */,
+				FF1343C093CA45B68545C92E6600CE54 /* Sources/App/UpdateManager.swift in Sources */,
 				17D748132E848B60001A632E /* Sources/Audio/AudioDeviceMonitor.swift in Sources */,
 				17D748142E848B60001A632E /* Sources/Audio/AudioSwitcher.swift in Sources */,
 				17D748152E848B60001A632E /* Sources/Models/Preferences.swift in Sources */,
@@ -314,6 +330,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = NO;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_ENTITLEMENTS = AudioKeeper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -357,6 +374,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = NO;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_ENTITLEMENTS = AudioKeeper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;

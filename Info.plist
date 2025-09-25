@@ -9,7 +9,7 @@
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.audiokeeper</string>
+    <string>denisyuce.AudioKeeper</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
@@ -17,11 +17,11 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
+    <string>1.1.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
-    <string>13.0</string>
+    <string>15.6</string>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright © 2024 Your Company. All rights reserved.</string>
     <key>LSUIElement</key>
@@ -34,12 +34,39 @@
     <string>AudioKeeper does not use camera.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>AudioKeeper monitors audio input devices to maintain your preferred settings.</string>
-    <key>NSHighResolutionCapable</key>
-    <true/>
+    <key>NSUserDefaultsUsageDescription</key>
+    <string>AudioKeeper stores user preferences and settings.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>AudioKeeper needs network access to check for updates.</string>
+    <key>NSNetworkVolumesUsageDescription</key>
+    <string>AudioKeeper needs network access to check for updates.</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
         <false/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>api.github.com</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <false/>
+                <key>NSExceptionMinimumTLSVersion</key>
+                <string>TLSv1.2</string>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+            <key>github.com</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <false/>
+                <key>NSExceptionMinimumTLSVersion</key>
+                <string>TLSv1.2</string>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+        </dict>
     </dict>
+    <key>NSHighResolutionCapable</key>
+    <true/>
 </dict>
 </plist>

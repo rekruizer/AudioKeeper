@@ -132,7 +132,8 @@ dmg_temp/
 .vscode/
 .idea/
 
-# Documentation that's not needed in repo
+# Documentation that's not needed in repo (Russian docs stay local)
+Documentation/
 GITHUB_SETUP_GUIDE.md
 RELEASE_SETUP.md
 HOMEBREW_SETUP.md

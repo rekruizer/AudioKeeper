@@ -23,7 +23,8 @@ AudioKeeper/                         # Application source
 ├── Sources/                         # Swift source code
 │   ├── App/                        # Main application files
 │   │   ├── AudioKeeperApp.swift    # SwiftUI app entry point
-│   │   └── AppDelegate.swift       # App state and menu UI
+│   │   ├── AppDelegate.swift       # App state and menu UI
+│   │   └── UpdateManager.swift     # GitHub-based automatic updates
 │   ├── Audio/                      # Audio device management
 │   │   ├── AudioDeviceMonitor.swift # CoreAudio monitoring
 │   │   └── AudioSwitcher.swift     # Device control
@@ -51,10 +52,11 @@ AudioKeeper/                         # Application source
 ### Core Application Files
 
 - **AudioKeeperApp.swift**: Main SwiftUI app with MenuBarExtra
-- **AppDelegate.swift**: App state management, menu UI, and device switching logic
+- **AppDelegate.swift**: App state management, menu UI, device switching logic, and update UI integration
+- **UpdateManager.swift**: GitHub-based automatic update system with weekly checks and one-click installation
 - **AudioDeviceMonitor.swift**: CoreAudio property listeners for device changes
 - **AudioSwitcher.swift**: CoreAudio device enumeration and control
-- **Preferences.swift**: UserDefaults persistence for app settings
+- **Preferences.swift**: UserDefaults persistence for app settings including update preferences
 
 ### Configuration Files
 
