@@ -33,13 +33,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: AudioKeeper-DMG
-        path: *.dmg
+        path: "*.dmg"
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: *.dmg
+        files: "*.dmg"
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
