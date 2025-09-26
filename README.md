@@ -1,4 +1,4 @@
-<span><img src="Assets.xcassets/AppIcon.appiconset/app-icon.png" alt="AudioKeeper" width="64" height="64" style="vertical-align: middle; margin-right: 15px;"> <h1 style="display: inline; margin: 0; vertical-align: middle;">AudioKeeper</h1></span>
+<span><img src="Assets.xcassets/AppIcon.appiconset/AudioKeeper@256.png" alt="AudioKeeper" width="64" height="64" style="vertical-align: middle; margin-right: 15px;"> <h1 style="display: inline; margin: 0; vertical-align: middle;">AudioKeeper</h1></span>
 
 [![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)](https://developer.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-5.7+-orange.svg)](https://swift.org/)
