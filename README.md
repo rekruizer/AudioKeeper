@@ -60,17 +60,6 @@ open AudioKeeper.xcodeproj
 **Requirements:** macOS 13.0+, Xcode 14.0+, Swift 5.7+
 
 
-## 📁 Project Structure
-
-```
-AudioKeeper/
-├── Sources/           # Swift source code
-├── Assets.xcassets/   # App icons and resources
-├── Scripts/          # Build and distribution scripts
-└── Documentation/    # Detailed documentation
-```
-
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -79,7 +68,7 @@ AudioKeeper/
 4. Submit a pull request
 
 
-## 💖 Support the Project
+### 💖 Support the Project
 
 [![PayPal](https://img.shields.io/badge/Donate-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/rekruizer)
 
@@ -105,12 +94,11 @@ bc1q9xj5p220tqgdn7gxjhuc9uk39xyl59vj0qs89f
 - ⚡ Keep the project maintained
 
 
-## 📄 License
+### 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-
-## 🆘 Support
+### 🆘 Support
 
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/rekruizer/AudioKeeper/issues)
 - 💡 **Feature Requests**: [GitHub Discussions](https://github.com/rekruizer/AudioKeeper/discussions)
