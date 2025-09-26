@@ -1,6 +1,7 @@
-<img src="images/app-icon.png" alt="AudioKeeper" width="64" height="64" align="left" style="margin-right: 10px; vertical-align: middle;">
-
-# AudioKeeper
+<div style="display: flex; align-items: center;">
+  <img src="images/app-icon.png" alt="AudioKeeper" width="64" height="64" style="margin-right: 10px;">
+  <h1 style="margin: 0;">AudioKeeper</h1>
+</div>
 
 [![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)](https://developer.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-5.7+-orange.svg)](https://swift.org/)
