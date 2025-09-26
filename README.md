@@ -1,4 +1,4 @@
-<img src="images/app-icon.png" alt="AudioKeeper" width="64" height="64" align="left" style="margin-right: 10px;">
+<img src="images/app-icon.png" alt="AudioKeeper" width="64" height="64" align="left" style="margin-right: 10px; vertical-align: middle;">
 
 # AudioKeeper
 
