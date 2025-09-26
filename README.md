@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="images/app-icon.png" alt="AudioKeeper" width="64" height="64">
-  <h1>🎧 AudioKeeper</h1>
+  <img src="images/app-icon.png" alt="AudioKeeper" width="64" height="64" style="vertical-align: middle; margin-right: 10px;">
+  <h1 style="display: inline; vertical-align: middle;">AudioKeeper</h1>
 </div>
 
 [![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)](https://developer.apple.com/macos/)
