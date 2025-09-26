@@ -74,6 +74,17 @@ open AudioKeeper.xcodeproj
 
 # 💖 Support the Project
 
+Hey, Your support would honestly brighten my day! 🙌
+
+There's something really nice about knowing that the things I build are actually helping people. Every contribution is like a little reminder that this work matters to someone.
+
+*Your support helps me continue building!* 💙
+- 🚀 Continue development and new features
+- 🐛 Fix bugs and improve stability
+- 📚 Create better documentation
+- ⚡ Keep the project maintained
+
+
 [![PayPal](https://img.shields.io/badge/Donate-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/rekruizer)
 
 ### ₿ Crypto Donations
@@ -91,11 +102,6 @@ bc1q9xj5p220tqgdn7gxjhuc9uk39xyl59vj0qs89f
 0x89D36cA00D690f294ebEaB81276062BCd9a5E8D0
 ```
 
-*Your support helps me continue building!* 💙
-- 🚀 Continue development and new features
-- 🐛 Fix bugs and improve stability
-- 📚 Create better documentation
-- ⚡ Keep the project maintained
 
 
 ### 📄 License
