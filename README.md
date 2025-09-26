@@ -9,6 +9,18 @@
 
 [![Download](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge&logo=github)](https://github.com/rekruizer/AudioKeeper/releases/latest)
 
+## 📱 Screenshots
+
+<div align="center">
+  <img src="images/app-icon.png" alt="AudioKeeper App Icon" width="128" height="128">
+  <p><em>AudioKeeper App Icon</em></p>
+</div>
+
+<div align="center">
+  <img src="images/menu-screenshot.png" alt="AudioKeeper Menu Interface" width="400">
+  <p><em>Easy device selection in menu bar</em></p>
+</div>
+
 
 ## 🚀 Quick Start
 
