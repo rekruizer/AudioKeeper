@@ -68,7 +68,7 @@ open AudioKeeper.xcodeproj
 4. Submit a pull request
 
 
-### 💖 Support the Project
+## 💖 Support the Project
 
 [![PayPal](https://img.shields.io/badge/Donate-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/rekruizer)
 
