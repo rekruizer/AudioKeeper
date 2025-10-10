@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -53,17 +55,24 @@ jobs:
       run: |
         # Extract version from tag (remove 'v' prefix)
         VERSION=${GITHUB_REF#refs/tags/v}
-        
+
+        # Wait a bit for release to be fully published
+        sleep 30
+
         # Calculate SHA256 of the DMG file
-        DMG_SHA256=$(curl -sL "https://github.com/${{ github.repository }}/releases/download/v${VERSION}/AudioKeeper-v${VERSION}.dmg" | shasum -a 256 | cut -d' ' -f1)
-        
+        DMG_SHA256=$(shasum -a 256 *.dmg | cut -d' ' -f1)
+
+        # Checkout main branch
+        git fetch origin main
+        git checkout main
+
         # Update the formula file
         sed -i '' "s/version \"[^\"]*\"/version \"${VERSION}\"/" audiokeeper.rb
         sed -i '' "s/sha256 \"[^\"]*\"/sha256 \"${DMG_SHA256}\"/" audiokeeper.rb
-        
+
         # Commit and push changes
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add audiokeeper.rb
         git diff --staged --quiet || git commit -m "chore: Auto-update Homebrew formula to v${VERSION}"
-        git push
+        git push origin main

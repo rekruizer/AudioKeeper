@@ -31,8 +31,14 @@ Everything is simple!
 
 ### Option 1: Homebrew (Recommended)
 ```bash
+# Add the AudioKeeper tap
+brew tap rekruizer/audiokeeper https://github.com/rekruizer/AudioKeeper
+
+# Install AudioKeeper
 brew install --cask audiokeeper
 ```
+
+> **Note:** AudioKeeper uses a custom tap since the app is not yet code-signed with Apple Developer ID. Installation works perfectly on all Macs!
 
 ### Option 2: Manual Download
 1. Download from [GitHub Releases](https://github.com/rekruizer/AudioKeeper/releases)
