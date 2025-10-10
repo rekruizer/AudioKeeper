@@ -134,11 +134,14 @@ final class AudioSwitcher {
 		var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
 		var dataSize: UInt32 = 0
 		guard AudioObjectGetPropertyDataSize(deviceID, &address, 0, nil, &dataSize) == noErr else { return nil }
-		let cfStr = "" as CFString
-		var s = cfStr
-		let status = AudioObjectGetPropertyData(deviceID, &address, 0, nil, &dataSize, &s)
-		guard status == noErr else { return nil }
-		return s as String
+
+		var cfString: Unmanaged<CFString>?
+		let status = withUnsafeMutablePointer(to: &cfString) { ptr in
+			AudioObjectGetPropertyData(deviceID, &address, 0, nil, &dataSize, ptr)
+		}
+
+		guard status == noErr, let unwrapped = cfString?.takeUnretainedValue() else { return nil }
+		return unwrapped as String
 	}
 
 	private func streamDirectionExists(deviceID: AudioDeviceID, scope: AudioObjectPropertyScope) -> Bool {

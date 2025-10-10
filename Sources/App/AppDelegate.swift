@@ -77,11 +77,21 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	func setPreferredOutput(uid: String?) {
 		preferences.preferredOutputUID = uid
 		store.save(preferences)
-		
+
 		// Immediately switch device in system if app is active
 		if preferences.isActive, let uid = uid {
 			switcher.setDefaultDevice(uid: uid, role: .output)
 		}
+	}
+
+	func setLaunchAtLogin(_ enabled: Bool) {
+		// Try to set in system
+		_ = LaunchAtLoginHelper.shared.setEnabled(enabled)
+
+		// Only save the actual state (what really happened)
+		let actualState = LaunchAtLoginHelper.shared.isEnabled()
+		preferences.launchAtLogin = actualState
+		store.save(preferences)
 	}
 }
 
@@ -91,9 +101,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		// Ensure app is completely hidden (not in Dock, not in Command+Tab)
 		NSApp.setActivationPolicy(.prohibited)
-		
+
 		// Initialize UpdateManager for automatic update checks
 		_ = UpdateManager.shared
+
+		// Sync launch at login state with system
+		let systemState = LaunchAtLoginHelper.shared.isEnabled()
+		if AppDelegate.sharedState.preferences.launchAtLogin != systemState {
+			AppDelegate.sharedState.preferences.launchAtLogin = systemState
+			PreferencesStore.shared.save(AppDelegate.sharedState.preferences)
+		}
 	}
 }
 
@@ -203,9 +220,18 @@ struct AppMenuView: View {
 			}
 			
 			Divider()
-			
-			Button("Quit") { 
-				NSApp.terminate(nil) 
+
+			Toggle("Launch at Login", isOn: Binding(
+				get: { state.preferences.launchAtLogin },
+				set: { state.setLaunchAtLogin($0) }
+			))
+			.padding(.horizontal, 12)
+			.padding(.vertical, 4)
+
+			Divider()
+
+			Button("Quit") {
+				NSApp.terminate(nil)
 			}
 			.padding(.horizontal, 12)
 			.padding(.vertical, 4)

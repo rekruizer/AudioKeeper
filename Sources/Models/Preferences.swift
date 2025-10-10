@@ -6,6 +6,7 @@ struct Preferences: Codable, Equatable {
 	var preferredOutputUID: String?
 	var lastUpdateCheck: Date?
 	var updateCheckFrequency: TimeInterval = 604800 // 7 days in seconds
+	var launchAtLogin: Bool = false
 }
 
 final class PreferencesStore {

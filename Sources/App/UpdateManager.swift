@@ -4,13 +4,13 @@ import AppKit
 import UserNotifications
 
 // MARK: - Update Models
-struct GitHubRelease: Codable {
+struct GitHubRelease: Codable, Sendable {
 	let tagName: String
 	let name: String
 	let body: String
 	let publishedAt: String
 	let assets: [GitHubAsset]
-	
+
 	enum CodingKeys: String, CodingKey {
 		case tagName = "tag_name"
 		case name
@@ -20,11 +20,11 @@ struct GitHubRelease: Codable {
 	}
 }
 
-struct GitHubAsset: Codable {
+struct GitHubAsset: Codable, Sendable {
 	let name: String
 	let browserDownloadUrl: String
 	let size: Int
-	
+
 	enum CodingKeys: String, CodingKey {
 		case name
 		case browserDownloadUrl = "browser_download_url"
