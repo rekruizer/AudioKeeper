@@ -131,6 +131,7 @@ dmg_temp/
 # IDE files
 .vscode/
 .idea/
+.claude/
 
 # Documentation that's not needed in repo (Russian docs stay local)
 Documentation/
