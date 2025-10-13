@@ -142,3 +142,5 @@ HOMEBREW_SUBMISSION.md
 
 # Development scripts (not needed for users)
 install_app.sh
+Documentation/REFACTORING_PLAN.md
+AudioKeeper.xcodeproj/project.pbxproj.backup

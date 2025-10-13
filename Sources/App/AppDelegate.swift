@@ -1,6 +1,7 @@
 import Cocoa
 import SwiftUI
 import Combine
+import os.log
 
 final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	@Published var preferences: Preferences
@@ -22,23 +23,23 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	func defaultDeviceDidChange(role: AudioRole) {
 		// Simple logic: if app is active and has preference, restore it
 		guard preferences.isActive else { return }
-		
+
 		// Small delay for stability
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
 			guard let self else { return }
-			
+
 			switch role {
 			case .input:
 				if let preferredUID = self.preferences.preferredInputUID,
 				   let currentUID = self.switcher.getDefaultDeviceUID(role: .input),
 				   currentUID != preferredUID {
-					self.switcher.setDefaultDevice(uid: preferredUID, role: .input)
+					_ = self.switcher.setDefaultDevice(uid: preferredUID, role: .input)
 				}
 			case .output:
 				if let preferredUID = self.preferences.preferredOutputUID,
 				   let currentUID = self.switcher.getDefaultDeviceUID(role: .output),
 				   currentUID != preferredUID {
-					self.switcher.setDefaultDevice(uid: preferredUID, role: .output)
+					_ = self.switcher.setDefaultDevice(uid: preferredUID, role: .output)
 				}
 			}
 		}
@@ -52,14 +53,14 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	func setActive(_ isActive: Bool) {
 		preferences.isActive = isActive
 		store.save(preferences)
-		
+
 		// Immediately set preferences when activated
 		if isActive {
 			if let inputUID = preferences.preferredInputUID {
-				switcher.setDefaultDevice(uid: inputUID, role: .input)
+				_ = switcher.setDefaultDevice(uid: inputUID, role: .input)
 			}
 			if let outputUID = preferences.preferredOutputUID {
-				switcher.setDefaultDevice(uid: outputUID, role: .output)
+				_ = switcher.setDefaultDevice(uid: outputUID, role: .output)
 			}
 		}
 	}
@@ -67,10 +68,10 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	func setPreferredInput(uid: String?) {
 		preferences.preferredInputUID = uid
 		store.save(preferences)
-		
+
 		// Immediately switch device in system if app is active
 		if preferences.isActive, let uid = uid {
-			switcher.setDefaultDevice(uid: uid, role: .input)
+			_ = switcher.setDefaultDevice(uid: uid, role: .input)
 		}
 	}
 
@@ -80,7 +81,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 
 		// Immediately switch device in system if app is active
 		if preferences.isActive, let uid = uid {
-			switcher.setDefaultDevice(uid: uid, role: .output)
+			_ = switcher.setDefaultDevice(uid: uid, role: .output)
 		}
 	}
 
@@ -93,30 +94,86 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 		preferences.launchAtLogin = actualState
 		store.save(preferences)
 	}
+
+	func refreshDevices() {
+		self.devices = switcher.listDevices()
+	}
+
+	func cleanup() {
+		// Stop monitoring to remove CoreAudio listeners
+		monitor.stop()
+		Logger.app.info("AppState cleanup completed")
+	}
+
+	/// Returns all devices including unavailable ones that are currently selected
+	func getAllDevicesForDisplay() -> [AudioDeviceInfo] {
+		var allDevices = devices
+
+		// Add unavailable but selected input device if not in list
+		if let inputUID = preferences.preferredInputUID,
+		   !allDevices.contains(where: { $0.uid == inputUID }) {
+			// Create placeholder for unavailable device
+			let unavailableDevice = AudioDeviceInfo(
+				uid: inputUID,
+				name: "Unknown Device",
+				isInput: true,
+				isOutput: false,
+				isAvailable: false
+			)
+			allDevices.append(unavailableDevice)
+		}
+
+		// Add unavailable but selected output device if not in list
+		if let outputUID = preferences.preferredOutputUID,
+		   !allDevices.contains(where: { $0.uid == outputUID }) {
+			// Create placeholder for unavailable device
+			let unavailableDevice = AudioDeviceInfo(
+				uid: outputUID,
+				name: "Unknown Device",
+				isInput: false,
+				isOutput: true,
+				isAvailable: false
+			)
+			allDevices.append(unavailableDevice)
+		}
+
+		return allDevices
+	}
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-	static let sharedState = AppState()
-	
+	let appState = AppState()
+	let updateManager = UpdateManager.shared
+
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		// Ensure app is completely hidden (not in Dock, not in Command+Tab)
 		NSApp.setActivationPolicy(.prohibited)
 
-		// Initialize UpdateManager for automatic update checks
-		_ = UpdateManager.shared
+		// Initialize UpdateManager for automatic update checks (already initialized above)
 
 		// Sync launch at login state with system
 		let systemState = LaunchAtLoginHelper.shared.isEnabled()
-		if AppDelegate.sharedState.preferences.launchAtLogin != systemState {
-			AppDelegate.sharedState.preferences.launchAtLogin = systemState
-			PreferencesStore.shared.save(AppDelegate.sharedState.preferences)
+		if appState.preferences.launchAtLogin != systemState {
+			appState.preferences.launchAtLogin = systemState
+			PreferencesStore.shared.save(appState.preferences)
 		}
+	}
+
+	func applicationWillTerminate(_ notification: Notification) {
+		// Clean up CoreAudio listeners before app terminates
+		Logger.app.info("Application terminating, cleaning up resources")
+		appState.cleanup()
+	}
+
+	deinit {
+		// Ensure cleanup even if applicationWillTerminate is not called
+		appState.cleanup()
 	}
 }
 
 struct AppMenuView: View {
-	@ObservedObject var state = AppDelegate.sharedState
-	@ObservedObject var updateManager = UpdateManager.shared
+	@EnvironmentObject var state: AppState
+	@EnvironmentObject var updateManager: UpdateManager
 	@State private var showingUpdateDialog = false
 
 	var body: some View {
@@ -137,14 +194,20 @@ struct AppMenuView: View {
 					.font(.caption)
 					.foregroundColor(.secondary)
 					.padding(.horizontal, 12)
-				
+
 				Picker("Input Device", selection: Binding(
 					get: { state.preferences.preferredInputUID ?? "" },
 					set: { state.setPreferredInput(uid: $0.isEmpty ? nil : $0) }
 				)) {
 					Text("System Default").tag("")
-					ForEach(state.devices.filter { $0.isInput }, id: \.uid) { device in
-						Text(device.name).tag(device.uid)
+					ForEach(state.getAllDevicesForDisplay().filter { $0.isInput }, id: \.uid) { device in
+						if device.isAvailable {
+							Text(device.name).tag(device.uid)
+						} else {
+							Text("\(device.name) (×)")
+								.foregroundColor(.secondary)
+								.tag(device.uid)
+						}
 					}
 				}
 				.pickerStyle(.menu)
@@ -157,19 +220,33 @@ struct AppMenuView: View {
 					.font(.caption)
 					.foregroundColor(.secondary)
 					.padding(.horizontal, 12)
-				
+
 				Picker("Output Device", selection: Binding(
 					get: { state.preferences.preferredOutputUID ?? "" },
 					set: { state.setPreferredOutput(uid: $0.isEmpty ? nil : $0) }
 				)) {
 					Text("System Default").tag("")
-					ForEach(state.devices.filter { $0.isOutput }, id: \.uid) { device in
-						Text(device.name).tag(device.uid)
+					ForEach(state.getAllDevicesForDisplay().filter { $0.isOutput }, id: \.uid) { device in
+						if device.isAvailable {
+							Text(device.name).tag(device.uid)
+						} else {
+							Text("\(device.name) (×)")
+								.foregroundColor(.secondary)
+								.tag(device.uid)
+						}
 					}
 				}
 				.pickerStyle(.menu)
 				.padding(.horizontal, 12)
 			}
+
+			// Refresh Devices button
+			Button("Refresh Devices") {
+				state.refreshDevices()
+			}
+			.buttonStyle(.borderless)
+			.padding(.horizontal, 12)
+			.padding(.vertical, 4)
 
 			Divider()
 			
@@ -194,7 +271,7 @@ struct AppMenuView: View {
 								.fontWeight(.medium)
 						}
 						.padding(.horizontal, 12)
-						
+
 						Button("Download and Install") {
 							updateManager.downloadAndInstallUpdate()
 						}
@@ -210,7 +287,16 @@ struct AppMenuView: View {
 					.padding(.horizontal, 12)
 					.padding(.vertical, 4)
 				}
-				
+
+				// Show error if present
+				if let error = updateManager.lastError {
+					Text(error)
+						.font(.caption2)
+						.foregroundColor(.red)
+						.padding(.horizontal, 12)
+						.fixedSize(horizontal: false, vertical: true)
+				}
+
 				if let lastChecked = updateManager.lastCheckedDate {
 					Text("Last checked: \(formatDate(lastChecked))")
 						.font(.caption2)

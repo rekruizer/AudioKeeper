@@ -1,17 +1,43 @@
 import Foundation
 import CoreAudio
 import AudioToolbox
+import os.log
 
 struct AudioDeviceInfo: Equatable, Hashable {
 	let uid: String
 	let name: String
 	let isInput: Bool
 	let isOutput: Bool
+	let isAvailable: Bool
 }
 
-enum AudioRole {
+enum AudioRole: CustomStringConvertible {
 	case input
 	case output
+
+	var description: String {
+		switch self {
+		case .input: return "input"
+		case .output: return "output"
+		}
+	}
+}
+
+enum AudioSwitcherError: Error, CustomStringConvertible {
+	case deviceNotFound(uid: String)
+	case setPropertyFailed(status: OSStatus, role: AudioRole)
+	case systemError(OSStatus)
+
+	var description: String {
+		switch self {
+		case .deviceNotFound(let uid):
+			return "Device not found: \(uid)"
+		case .setPropertyFailed(let status, let role):
+			return "Failed to set default \(role) device (status: \(status))"
+		case .systemError(let status):
+			return "CoreAudio system error: \(status)"
+		}
+	}
 }
 
 final class AudioSwitcher {
@@ -26,33 +52,34 @@ final class AudioSwitcher {
 
 		var dataSize: UInt32 = 0
 		var status = AudioObjectGetPropertyDataSize(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, &dataSize)
-		guard status == noErr && dataSize > 0 else { 
-			print("Failed to get device list size: \(status)")
-			return [] 
+		guard status == noErr && dataSize > 0 else {
+			Logger.audio.error("Failed to get device list size: \(status)")
+			return []
 		}
 
 		let deviceCount = Int(dataSize) / MemoryLayout<AudioDeviceID>.size
 		var deviceIDs = Array(repeating: AudioDeviceID(0), count: deviceCount)
 
 		status = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, &dataSize, &deviceIDs)
-		guard status == noErr else { 
-			print("Failed to get device list: \(status)")
-			return [] 
+		guard status == noErr else {
+			Logger.audio.error("Failed to get device list: \(status)")
+			return []
 		}
 
 		return deviceIDs.compactMap { deviceID in
 			// Skip "empty" devices and check validity
-			guard deviceID != 0, isValidDevice(deviceID) else { return nil }
-			
+			guard deviceID != 0 else { return nil }
+
+			let isAvailable = isValidDevice(deviceID)
 			guard let uid = getString(deviceID: deviceID, selector: kAudioDevicePropertyDeviceUID) else { return nil }
 			let name = getString(deviceID: deviceID, selector: kAudioObjectPropertyName) ?? uid
 			let hasInput = streamDirectionExists(deviceID: deviceID, scope: kAudioDevicePropertyScopeInput)
 			let hasOutput = streamDirectionExists(deviceID: deviceID, scope: kAudioDevicePropertyScopeOutput)
-			
-					// Return only devices with at least one direction (input or output)
+
+			// Return only devices with at least one direction (input or output)
 			guard hasInput || hasOutput else { return nil }
-			
-			return AudioDeviceInfo(uid: uid, name: name, isInput: hasInput, isOutput: hasOutput)
+
+			return AudioDeviceInfo(uid: uid, name: name, isInput: hasInput, isOutput: hasOutput, isAvailable: isAvailable)
 		}
 	}
 
@@ -66,20 +93,39 @@ final class AudioSwitcher {
 		return getString(deviceID: deviceID, selector: kAudioDevicePropertyDeviceUID)
 	}
 
-	func setDefaultDevice(uid: String, role: AudioRole) {
-		guard let deviceID = deviceID(forUID: uid) else { 
-			print("Device with UID \(uid) not found")
-			return 
+	func setDefaultDevice(uid: String, role: AudioRole) -> Result<Void, AudioSwitcherError> {
+		guard let deviceID = deviceID(forUID: uid) else {
+			Logger.audio.warning("Device with UID \(uid) not found")
+			return .failure(.deviceNotFound(uid: uid))
 		}
-		let selector: AudioObjectPropertySelector = (role == .input) ? kAudioHardwarePropertyDefaultInputDevice : kAudioHardwarePropertyDefaultOutputDevice
-		var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
-		var dev = deviceID
-		let status = AudioObjectSetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, UInt32(MemoryLayout<AudioDeviceID>.size), &dev)
-		if status != noErr {
-			print("Failed to set default \(role) device: \(status)")
-		} else {
-			print("Successfully set default \(role) device to \(uid)")
+
+		// Retry logic: attempt up to 3 times with 1 second delay
+		let maxAttempts = 3
+		var lastStatus: OSStatus = noErr
+
+		for attempt in 1...maxAttempts {
+			let selector: AudioObjectPropertySelector = (role == .input) ? kAudioHardwarePropertyDefaultInputDevice : kAudioHardwarePropertyDefaultOutputDevice
+			var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
+			var dev = deviceID
+			let status = AudioObjectSetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, UInt32(MemoryLayout<AudioDeviceID>.size), &dev)
+
+			if status == noErr {
+				Logger.audio.info("Successfully set default \(role) device to \(uid) (attempt \(attempt)/\(maxAttempts))")
+				return .success(())
+			}
+
+			lastStatus = status
+			Logger.audio.warning("Failed to set default \(role) device (attempt \(attempt)/\(maxAttempts)): \(status)")
+
+			// Wait before retry (except on last attempt)
+			if attempt < maxAttempts {
+				Thread.sleep(forTimeInterval: 1.0)
+			}
 		}
+
+		// All attempts failed
+		Logger.audio.error("Failed to set default \(role) device after \(maxAttempts) attempts: \(lastStatus)")
+		return .failure(.setPropertyFailed(status: lastStatus, role: role))
 	}
 
 	private func deviceID(forUID uid: String) -> AudioDeviceID? {
@@ -91,18 +137,18 @@ final class AudioSwitcher {
 		
 		var dataSize: UInt32 = 0
 		let status = AudioObjectGetPropertyDataSize(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, &dataSize)
-		guard status == noErr && dataSize > 0 else { 
-			print("Failed to get device list size: \(status)")
-			return nil 
+		guard status == noErr && dataSize > 0 else {
+			Logger.audio.error("Failed to get device list size: \(status)")
+			return nil
 		}
 		
 		let count = Int(dataSize) / MemoryLayout<AudioDeviceID>.size
 		var ids = Array(repeating: AudioDeviceID(0), count: count)
 		
 		let getStatus = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, &dataSize, &ids)
-		guard getStatus == noErr else { 
-			print("Failed to get device list: \(getStatus)")
-			return nil 
+		guard getStatus == noErr else {
+			Logger.audio.error("Failed to get device list: \(getStatus)")
+			return nil
 		}
 		
 		for id in ids {

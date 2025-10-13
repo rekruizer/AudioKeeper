@@ -21,17 +21,15 @@
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
-    <string>15.6</string>
+    <string>13.0</string>
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright © 2024 Your Company. All rights reserved.</string>
+    <string>Copyright © 2024 Denis Yuce</string>
     <key>LSUIElement</key>
     <true/>
     <key>LSBackgroundOnly</key>
     <false/>
     <key>NSAppleEventsUsageDescription</key>
     <string>AudioKeeper needs access to control audio devices.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>AudioKeeper does not use camera.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>AudioKeeper monitors audio input devices to maintain your preferred settings.</string>
     <key>NSUserDefaultsUsageDescription</key>

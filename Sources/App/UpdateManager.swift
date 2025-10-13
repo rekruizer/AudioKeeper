@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import AppKit
 import UserNotifications
+import os.log
 
 // MARK: - Update Models
 struct GitHubRelease: Codable, Sendable {
@@ -46,6 +47,7 @@ final class UpdateManager: ObservableObject {
 	@Published var isCheckingForUpdates = false
 	@Published var updateAvailable: UpdateInfo?
 	@Published var lastCheckedDate: Date?
+	@Published var lastError: String?
 	
 	private let preferencesStore = PreferencesStore.shared
 	private let session = URLSession.shared
@@ -67,20 +69,23 @@ final class UpdateManager: ObservableObject {
 	
 	func checkForUpdates() {
 		guard !isCheckingForUpdates else { return }
-		
+
 		isCheckingForUpdates = true
-		
+		lastError = nil // Clear previous errors
+
 		checkForUpdatesInternal { [weak self] result in
 			DispatchQueue.main.async {
 				self?.isCheckingForUpdates = false
-				
+
 				switch result {
 				case .success(let updateInfo):
 					self?.updateAvailable = updateInfo
 					self?.lastCheckedDate = Date()
 					self?.saveLastCheckDate()
+					self?.lastError = nil
 				case .failure(let error):
-					print("Error checking for updates: \(error.localizedDescription)")
+					Logger.updates.error("Error checking for updates: \(error.localizedDescription)")
+					self?.lastError = error.localizedDescription
 				}
 			}
 		}
@@ -95,7 +100,7 @@ final class UpdateManager: ObservableObject {
 				case .success(let localURL):
 					self?.installUpdate(from: localURL)
 				case .failure(let error):
-					print("Error downloading update: \(error.localizedDescription)")
+					Logger.updates.error("Error downloading update: \(error.localizedDescription)")
 				}
 			}
 		}
@@ -128,20 +133,21 @@ final class UpdateManager: ObservableObject {
 		var request = URLRequest(url: url)
 		request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
 		
-		session.dataTask(with: request) { data, response, error in
+		session.dataTask(with: request) { [weak self] data, response, error in
 			if let error = error {
 				completion(.failure(error))
 				return
 			}
-			
+
 			guard let data = data else {
 				completion(.failure(UpdateError.noData))
 				return
 			}
-			
+
 			do {
-				let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
-				let updateInfo = self.processRelease(release)
+				let decoder = JSONDecoder()
+				let release = try decoder.decode(GitHubRelease.self, from: data)
+				let updateInfo = self?.processRelease(release)
 				completion(.success(updateInfo))
 			} catch {
 				completion(.failure(error))
@@ -256,7 +262,7 @@ final class UpdateManager: ObservableObject {
 				
 				UNUserNotificationCenter.current().add(request) { error in
 					if let error = error {
-						print("Error showing notification: \(error)")
+						Logger.updates.error("Error showing notification: \(error.localizedDescription)")
 					}
 				}
 			}
@@ -277,7 +283,7 @@ enum UpdateError: LocalizedError {
 	case invalidVersion
 	case downloadFailed
 	case installationFailed
-	
+
 	var errorDescription: String? {
 		switch self {
 		case .invalidURL:

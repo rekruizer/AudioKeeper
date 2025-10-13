@@ -7,6 +7,8 @@ struct AudioKeeperApp: App {
 	var body: some Scene {
 		MenuBarExtra("AudioKeeper", systemImage: "headphones") {
 			AppMenuView()
+				.environmentObject(appDelegate.appState)
+				.environmentObject(appDelegate.updateManager)
 		}
 	}
 }

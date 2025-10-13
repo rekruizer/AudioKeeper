@@ -1,5 +1,6 @@
 import Foundation
 import ServiceManagement
+import os.log
 
 final class LaunchAtLoginHelper {
 	static let shared = LaunchAtLoginHelper()
@@ -37,7 +38,7 @@ final class LaunchAtLoginHelper {
 				return true
 			}
 		} catch {
-			print("Failed to \(enabled ? "enable" : "disable") launch at login: \(error.localizedDescription)")
+			Logger.preferences.error("Failed to \(enabled ? "enable" : "disable") launch at login: \(error.localizedDescription)")
 			return false
 		}
 	}
