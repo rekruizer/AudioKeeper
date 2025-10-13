@@ -1,7 +1,7 @@
 import Cocoa
 import SwiftUI
 import Combine
-import os.log
+import OSLog
 
 final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	@Published var preferences: Preferences

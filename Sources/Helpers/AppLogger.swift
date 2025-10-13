@@ -1,4 +1,4 @@
-import os.log
+import OSLog
 import Foundation
 
 /// Centralized logging system for AudioKeeper

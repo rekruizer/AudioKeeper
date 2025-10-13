@@ -1,7 +1,7 @@
 import Foundation
 import CoreAudio
 import AudioToolbox
-import os.log
+import OSLog
 
 struct AudioDeviceInfo: Equatable, Hashable {
 	let uid: String

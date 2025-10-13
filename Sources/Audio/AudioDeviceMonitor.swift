@@ -1,6 +1,6 @@
 import Foundation
 import CoreAudio
-import os.log
+import OSLog
 
 protocol AudioDeviceMonitorDelegate: AnyObject {
 	func defaultDeviceDidChange(role: AudioRole)

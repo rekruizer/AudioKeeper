@@ -2,7 +2,7 @@ import Foundation
 import Combine
 import AppKit
 import UserNotifications
-import os.log
+import OSLog
 
 // MARK: - Update Models
 struct GitHubRelease: Codable, Sendable {
@@ -59,8 +59,9 @@ final class UpdateManager: ObservableObject {
 	
 	init() {
 		// Load last check date from preferences
-		lastCheckedDate = preferencesStore.load(currentInputUID: nil, currentOutputUID: nil).lastUpdateCheck
-		
+		let preferences = preferencesStore.load(currentInputUID: nil as String?, currentOutputUID: nil as String?)
+		lastCheckedDate = preferences.lastUpdateCheck
+
 		// Automatic check on launch if enough time has passed
 		checkForAutomaticUpdate()
 	}
@@ -109,7 +110,7 @@ final class UpdateManager: ObservableObject {
 	// MARK: - Private Methods
 	
 	private func checkForAutomaticUpdate() {
-		let preferences = preferencesStore.load(currentInputUID: nil, currentOutputUID: nil)
+		let preferences = preferencesStore.load(currentInputUID: nil as String?, currentOutputUID: nil as String?)
 		
 		guard let lastCheck = preferences.lastUpdateCheck else {
 			// First launch - check for updates
@@ -129,11 +130,11 @@ final class UpdateManager: ObservableObject {
 			completion(.failure(UpdateError.invalidURL))
 			return
 		}
-		
+
 		var request = URLRequest(url: url)
 		request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
-		
-		session.dataTask(with: request) { [weak self] data, response, error in
+
+		session.dataTask(with: request) { data, response, error in
 			if let error = error {
 				completion(.failure(error))
 				return
@@ -145,9 +146,8 @@ final class UpdateManager: ObservableObject {
 			}
 
 			do {
-				let decoder = JSONDecoder()
-				let release = try decoder.decode(GitHubRelease.self, from: data)
-				let updateInfo = self?.processRelease(release)
+				let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
+				let updateInfo = self.processRelease(release)
 				completion(.success(updateInfo))
 			} catch {
 				completion(.failure(error))
@@ -270,7 +270,7 @@ final class UpdateManager: ObservableObject {
 	}
 	
 	private func saveLastCheckDate() {
-		var preferences = preferencesStore.load(currentInputUID: nil, currentOutputUID: nil)
+		var preferences = preferencesStore.load(currentInputUID: nil as String?, currentOutputUID: nil as String?)
 		preferences.lastUpdateCheck = lastCheckedDate
 		preferencesStore.save(preferences)
 	}

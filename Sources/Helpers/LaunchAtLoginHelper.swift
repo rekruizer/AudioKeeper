@@ -1,6 +1,6 @@
 import Foundation
 import ServiceManagement
-import os.log
+import OSLog
 
 final class LaunchAtLoginHelper {
 	static let shared = LaunchAtLoginHelper()
