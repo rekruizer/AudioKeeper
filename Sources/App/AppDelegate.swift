@@ -12,10 +12,19 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	private let monitor = AudioDeviceMonitor()
 
 	init() {
+		let currentDevices = switcher.listDevices()
+		self.devices = currentDevices
 		let currentIn = switcher.getDefaultDeviceUID(role: .input)
 		let currentOut = switcher.getDefaultDeviceUID(role: .output)
-		self.preferences = store.load(currentInputUID: currentIn, currentOutputUID: currentOut)
-		self.devices = switcher.listDevices()
+		let currentInName = currentDevices.first(where: { $0.uid == currentIn })?.name
+		let currentOutName = currentDevices.first(where: { $0.uid == currentOut })?.name
+		self.preferences = store.load(
+			currentInputUID: currentIn,
+			currentOutputUID: currentOut,
+			currentInputName: currentInName,
+			currentOutputName: currentOutName
+		)
+		populateMissingPreferredDeviceNames()
 		monitor.delegate = self
 		monitor.start()
 	}
@@ -48,6 +57,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 	func deviceListDidChange() {
 		// Refresh device list; this often precedes default change when a new device connects
 		self.devices = switcher.listDevices()
+		populateMissingPreferredDeviceNames()
 	}
 
 	func setActive(_ isActive: Bool) {
@@ -67,6 +77,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 
 	func setPreferredInput(uid: String?) {
 		preferences.preferredInputUID = uid
+		preferences.preferredInputName = resolveDeviceName(for: uid, role: .input)
 		store.save(preferences)
 
 		// Immediately switch device in system if app is active
@@ -77,6 +88,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 
 	func setPreferredOutput(uid: String?) {
 		preferences.preferredOutputUID = uid
+		preferences.preferredOutputName = resolveDeviceName(for: uid, role: .output)
 		store.save(preferences)
 
 		// Immediately switch device in system if app is active
@@ -97,6 +109,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 
 	func refreshDevices() {
 		self.devices = switcher.listDevices()
+		populateMissingPreferredDeviceNames()
 	}
 
 	func cleanup() {
@@ -115,7 +128,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 			// Create placeholder for unavailable device
 			let unavailableDevice = AudioDeviceInfo(
 				uid: inputUID,
-				name: "Unknown Device",
+				name: preferences.preferredInputName ?? "Unknown Device",
 				isInput: true,
 				isOutput: false,
 				isAvailable: false
@@ -129,7 +142,7 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 			// Create placeholder for unavailable device
 			let unavailableDevice = AudioDeviceInfo(
 				uid: outputUID,
-				name: "Unknown Device",
+				name: preferences.preferredOutputName ?? "Unknown Device",
 				isInput: false,
 				isOutput: true,
 				isAvailable: false
@@ -138,6 +151,51 @@ final class AppState: ObservableObject, AudioDeviceMonitorDelegate {
 		}
 
 		return allDevices
+	}
+
+	private func resolveDeviceName(for uid: String?, role: AudioRole) -> String? {
+		guard let uid else { return nil }
+
+		// Prefer current in-memory list
+		if let name = devices.first(where: { $0.uid == uid })?.name {
+			return name
+		}
+
+		// Fallback to stored name for this role if it matches the same UID
+		switch role {
+		case .input:
+			if preferences.preferredInputUID == uid {
+				return preferences.preferredInputName
+			}
+		case .output:
+			if preferences.preferredOutputUID == uid {
+				return preferences.preferredOutputName
+			}
+		}
+
+		return nil
+	}
+
+	private func populateMissingPreferredDeviceNames() {
+		var changed = false
+
+		if let inputUID = preferences.preferredInputUID,
+		   preferences.preferredInputName == nil,
+		   let name = devices.first(where: { $0.uid == inputUID })?.name {
+			preferences.preferredInputName = name
+			changed = true
+		}
+
+		if let outputUID = preferences.preferredOutputUID,
+		   preferences.preferredOutputName == nil,
+		   let name = devices.first(where: { $0.uid == outputUID })?.name {
+			preferences.preferredOutputName = name
+			changed = true
+		}
+
+		if changed {
+			store.save(preferences)
+		}
 	}
 }
 
