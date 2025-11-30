@@ -7,6 +7,10 @@ cask "audiokeeper" do
   desc "macOS menu bar application that automatically maintains your preferred audio input/output devices"
   homepage "https://github.com/rekruizer/AudioKeeper"
 
+  postflight do
+    system "xattr", "-d", "com.apple.quarantine", "#{appdir}/AudioKeeper.app"
+  end
+
   app "AudioKeeper.app"
 
   zap trash: [

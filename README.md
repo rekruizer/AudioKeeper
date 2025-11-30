@@ -38,19 +38,32 @@ brew tap rekruizer/audiokeeper https://github.com/rekruizer/AudioKeeper
 brew install --cask audiokeeper
 ```
 
-> **Note:** AudioKeeper uses a custom tap since the app is not yet code-signed with Apple Developer ID. Installation works perfectly on all Macs!
+> **Note:** Homebrew installation automatically handles macOS security warnings. The app will work immediately without any manual quarantine removal!
+
+<details>
+<summary><b>About Code Signing & Notarization</b></summary>
+
+AudioKeeper is not notarized by Apple. Notarization requires sending binaries to Apple for approval, which involves:
+- Annual Apple Developer Program fees ($99/year)
+- Compliance with Apple's specific build requirements
+- Ongoing maintenance overhead for a free, open-source project
+
+**By using AudioKeeper, you acknowledge that it's not notarized.** The app is completely open-source, and you can review the code yourself. The Homebrew installation script automatically removes the `com.apple.quarantine` attribute, so the app works out of the box without security warnings.
+
+For transparency: this approach is used by other open-source macOS apps like [AeroSpace](https://github.com/nikitabobko/AeroSpace).
+</details>
 
 ### Option 2: Manual Download
 1. Download from [GitHub Releases](https://github.com/rekruizer/AudioKeeper/releases)
 2. **If DMG won't open**: Right-click DMG → "Open" → "Open" (bypasses security warning)
 3. Open DMG and drag AudioKeeper.app to Applications
-4. **If app won't launch**: Right-click AudioKeeper.app → "Open" → "Open"
-5. **Remove quarantine** (recommended):
+4. **First launch**: Right-click AudioKeeper.app → "Open" → "Open" (required for unsigned apps)
+5. **Optional - Remove quarantine attribute** to avoid future warnings:
    ```bash
-   sudo xattr -d com.apple.quarantine /Applications/AudioKeeper.app
+   xattr -d com.apple.quarantine /Applications/AudioKeeper.app
    ```
 
-> **Security Note:** macOS shows warnings for unsigned apps. This is normal and safe. AudioKeeper is open-source and malware-free.
+> **Security Note:** macOS shows warnings for unsigned apps. This is normal and safe. AudioKeeper is open-source - you can review the code yourself.
 
 
 ## 🛠️ Development
