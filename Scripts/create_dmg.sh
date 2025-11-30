@@ -7,9 +7,22 @@ cd "$(dirname "$0")/.."
 
 APP_NAME="AudioKeeper"
 APP_PATH="./AudioKeeper.app"
-VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "v1.0.0")
-DMG_NAME="${APP_NAME}-${VERSION}.dmg"
-VOLUME_NAME="${APP_NAME} ${VERSION}"
+# Determine version:
+# - Prefer APP_VERSION/DMG_VERSION from CI (exported from tag)
+# - Fallback to git describe (keeps compatibility for local builds)
+RAW_VERSION="${APP_VERSION:-}"
+if [ -z "$RAW_VERSION" ]; then
+    RAW_VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "v1.0.0")
+fi
+
+# Normalize: strip leading "v" for the raw version
+if [[ "$RAW_VERSION" == v* ]]; then
+    RAW_VERSION="${RAW_VERSION#v}"
+fi
+
+VERSION_WITH_V="${DMG_VERSION:-v${RAW_VERSION}}"
+DMG_NAME="${APP_NAME}-${VERSION_WITH_V}.dmg"
+VOLUME_NAME="${APP_NAME} ${VERSION_WITH_V}"
 
 # Check if app exists
 if [ ! -d "$APP_PATH" ]; then
@@ -29,7 +42,7 @@ ln -s /Applications "$TEMP_DIR/Applications"
 
 # Create README for DMG
 cat > "$TEMP_DIR/README.txt" << EOF
-AudioKeeper ${VERSION}
+AudioKeeper ${VERSION_WITH_V}
 
 Installation:
 1. Drag AudioKeeper.app to Applications folder

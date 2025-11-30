@@ -17,6 +17,31 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Sync version from tag into Info.plist and env
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+        echo "DMG_VERSION=v$VERSION" >> $GITHUB_ENV
+
+        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" Info.plist
+        PLIST_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" Info.plist)
+
+        echo "Tag version: $VERSION"
+        echo "Info.plist version after sync: $PLIST_VERSION"
+
+        if [ "$PLIST_VERSION" != "$VERSION" ]; then
+          echo "Version mismatch after sync (expected $VERSION, got $PLIST_VERSION)"
+          exit 1
+        fi
+
+    - name: Derive version from Info.plist (manual runs)
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+      run: |
+        VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" Info.plist)
+        echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+        echo "DMG_VERSION=v$VERSION" >> $GITHUB_ENV
       
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
