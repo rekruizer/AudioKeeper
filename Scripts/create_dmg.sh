@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "💿 Creating DMG installer..."
 
@@ -7,32 +8,27 @@ cd "$(dirname "$0")/.."
 
 APP_NAME="AudioKeeper"
 APP_PATH="./AudioKeeper.app"
-# Determine version:
-# - Prefer APP_VERSION/DMG_VERSION from CI (exported from tag)
-# - Fallback to git describe (keeps compatibility for local builds)
-RAW_VERSION="${APP_VERSION:-}"
-if [ -z "$RAW_VERSION" ]; then
-    RAW_VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "v1.0.0")
-fi
-
-# Normalize: strip leading "v" for the raw version
-if [[ "$RAW_VERSION" == v* ]]; then
-    RAW_VERSION="${RAW_VERSION#v}"
-fi
-
-VERSION_WITH_V="${DMG_VERSION:-v${RAW_VERSION}}"
-DMG_NAME="${APP_NAME}-${VERSION_WITH_V}.dmg"
-VOLUME_NAME="${APP_NAME} ${VERSION_WITH_V}"
-
 # Check if app exists
 if [ ! -d "$APP_PATH" ]; then
     echo "❌ AudioKeeper.app not found. Run build_release.sh first."
     exit 1
 fi
 
+# Name the installer after the actual binary, never a nearby or dirty git tag.
+RAW_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")
+if [[ ! "$RAW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || \
+   [ "${APP_VERSION:-$RAW_VERSION}" != "$RAW_VERSION" ] || \
+   [ "${DMG_VERSION:-v$RAW_VERSION}" != "v$RAW_VERSION" ]; then
+    echo "❌ App, release and DMG versions do not match"
+    exit 1
+fi
+VERSION_WITH_V="v${RAW_VERSION}"
+DMG_NAME="${APP_NAME}-${VERSION_WITH_V}.dmg"
+VOLUME_NAME="${APP_NAME} ${VERSION_WITH_V}"
+
 # Create temporary directory
-TEMP_DIR="./dmg_temp"
-mkdir -p "$TEMP_DIR"
+TEMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TEMP_DIR"' EXIT
 
 # Copy app
 cp -R "$APP_PATH" "$TEMP_DIR/"
@@ -51,10 +47,10 @@ Installation:
 
 IMPORTANT - Security Warning:
 If macOS shows a security warning:
-1. Right-click AudioKeeper.app → "Open" → "Open"
-2. Or run: sudo xattr -d com.apple.quarantine /Applications/AudioKeeper.app
+Review System Settings → Privacy & Security for an "Open Anyway" option.
+Only allow this app if you trust the release source.
 
-This is normal for unsigned apps. AudioKeeper is safe to use.
+This build is not notarized by Apple.
 
 For more information, visit:
 https://github.com/rekruizer/AudioKeeper

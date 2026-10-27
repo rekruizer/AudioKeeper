@@ -15,6 +15,8 @@ cask "audiokeeper" do
 
   zap trash: [
     "~/Library/Preferences/com.rekruizer.audiokeeper.plist",
+    "~/Library/Preferences/denisyuce.AudioKeeper.plist",
+    "~/Library/Containers/denisyuce.AudioKeeper",
     "~/Library/Application Support/AudioKeeper",
   ]
 end

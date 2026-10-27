@@ -2,11 +2,13 @@ import Foundation
 import CoreAudio
 import OSLog
 
+@MainActor
 protocol AudioDeviceMonitorDelegate: AnyObject {
 	func defaultDeviceDidChange(role: AudioRole)
 	func deviceListDidChange()
 }
 
+@MainActor
 final class AudioDeviceMonitor {
 	weak var delegate: AudioDeviceMonitorDelegate?
 	private var isStarted = false
@@ -41,7 +43,7 @@ final class AudioDeviceMonitor {
 
 		// Add handlers with error checking and store blocks for cleanup
 		inputListenerBlock = { [weak self] _, _ in
-			self?.delegate?.defaultDeviceDidChange(role: .input)
+			Task { @MainActor [weak self] in self?.delegate?.defaultDeviceDidChange(role: .input) }
 		}
 		let inputStatus = AudioObjectAddPropertyListenerBlock(systemObject, &defaultInputAddr, DispatchQueue.main, inputListenerBlock!)
 		if inputStatus != noErr {
@@ -49,7 +51,7 @@ final class AudioDeviceMonitor {
 		}
 
 		outputListenerBlock = { [weak self] _, _ in
-			self?.delegate?.defaultDeviceDidChange(role: .output)
+			Task { @MainActor [weak self] in self?.delegate?.defaultDeviceDidChange(role: .output) }
 		}
 		let outputStatus = AudioObjectAddPropertyListenerBlock(systemObject, &defaultOutputAddr, DispatchQueue.main, outputListenerBlock!)
 		if outputStatus != noErr {
@@ -57,7 +59,7 @@ final class AudioDeviceMonitor {
 		}
 
 		devicesListenerBlock = { [weak self] _, _ in
-			self?.delegate?.deviceListDidChange()
+			Task { @MainActor [weak self] in self?.delegate?.deviceListDidChange() }
 		}
 		let devicesStatus = AudioObjectAddPropertyListenerBlock(systemObject, &devicesAddr, DispatchQueue.main, devicesListenerBlock!)
 		if devicesStatus != noErr {
@@ -103,7 +105,7 @@ final class AudioDeviceMonitor {
 		Logger.audio.info("AudioDeviceMonitor stopped successfully")
 	}
 
-	deinit {
+	isolated deinit {
 		// Explicitly remove all listeners before deallocation
 		stop()
 	}

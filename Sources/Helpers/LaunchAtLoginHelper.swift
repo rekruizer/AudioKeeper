@@ -25,9 +25,16 @@ final class LaunchAtLoginHelper {
 				if service.status == .enabled {
 					return true
 				}
+				if service.status == .requiresApproval {
+					SMAppService.openSystemSettingsLoginItems()
+					return false
+				}
 				// Register the app to launch at login
 				try service.register()
-				return true
+				if service.status == .requiresApproval {
+					SMAppService.openSystemSettingsLoginItems()
+				}
+				return isEnabled()
 			} else {
 				// Already disabled, nothing to do
 				if service.status == .notRegistered {

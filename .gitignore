@@ -144,3 +144,6 @@ HOMEBREW_SUBMISSION.md
 install_app.sh
 Documentation/REFACTORING_PLAN.md
 AudioKeeper.xcodeproj/project.pbxproj.backup
+
+# Local code navigation cache
+graphify-out/

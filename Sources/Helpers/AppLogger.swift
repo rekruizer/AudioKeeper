@@ -5,16 +5,16 @@ import Foundation
 /// Uses Apple's unified logging system (OSLog) for proper debug and release builds
 extension Logger {
 	/// Logger for audio device operations (monitoring, switching, listing)
-	static let audio = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "audio")
+	nonisolated static let audio = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "audio")
 
 	/// Logger for update checking and installation
-	static let updates = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "updates")
+	nonisolated static let updates = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "updates")
 
 	/// Logger for preferences and settings management
-	static let preferences = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "preferences")
+	nonisolated static let preferences = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "preferences")
 
 	/// Logger for app lifecycle and system integration
-	static let app = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "app")
+	nonisolated static let app = Logger(subsystem: Bundle.main.bundleIdentifier ?? "denisyuce.AudioKeeper", category: "app")
 }
 
 /// Log levels guide:

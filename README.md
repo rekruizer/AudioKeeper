@@ -1,7 +1,7 @@
 <span><img src="Assets.xcassets/AppIcon.appiconset/55321 1.png" alt="AudioKeeper" width="64" height="64" style="vertical-align: middle; margin-right: 15px;"> <h1 style="display: inline; margin: 0; vertical-align: middle;">AudioKeeper</h1></span>
 
 [![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)](https://developer.apple.com/macos/)
-[![Swift](https://img.shields.io/badge/Swift-5.7+-orange.svg)](https://swift.org/)
+[![Swift](https://img.shields.io/badge/Swift-6.2+-orange.svg)](https://swift.org/)
 [![SwiftUI](https://img.shields.io/badge/SwiftUI-4.0+-green.svg)](https://developer.apple.com/xcode/swiftui/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -38,32 +38,14 @@ brew tap rekruizer/audiokeeper https://github.com/rekruizer/AudioKeeper
 brew install --cask audiokeeper
 ```
 
-> **Note:** Homebrew installation automatically handles macOS security warnings. The app will work immediately without any manual quarantine removal!
-
-<details>
-<summary><b>About Code Signing & Notarization</b></summary>
-
-AudioKeeper is not notarized by Apple. Notarization requires sending binaries to Apple for approval, which involves:
-- Annual Apple Developer Program fees ($99/year)
-- Compliance with Apple's specific build requirements
-- Ongoing maintenance overhead for a free, open-source project
-
-**By using AudioKeeper, you acknowledge that it's not notarized.** The app is completely open-source, and you can review the code yourself. The Homebrew installation script automatically removes the `com.apple.quarantine` attribute, so the app works out of the box without security warnings.
-
-For transparency: this approach is used by other open-source macOS apps like [AeroSpace](https://github.com/nikitabobko/AeroSpace).
-</details>
+> **Security:** AudioKeeper is not notarized by Apple. The cask removes the quarantine attribute; this bypasses a Gatekeeper check and is not proof of safety. Install only releases you trust.
 
 ### Option 2: Manual Download
-1. Download from [GitHub Releases](https://github.com/rekruizer/AudioKeeper/releases)
-2. **If DMG won't open**: Right-click DMG → "Open" → "Open" (bypasses security warning)
-3. Open DMG and drag AudioKeeper.app to Applications
-4. **First launch**: Right-click AudioKeeper.app → "Open" → "Open" (required for unsigned apps)
-5. **Optional - Remove quarantine attribute** to avoid future warnings:
-   ```bash
-   xattr -d com.apple.quarantine /Applications/AudioKeeper.app
-   ```
+1. Download from [GitHub Releases](https://github.com/rekruizer/AudioKeeper/releases).
+2. Open the DMG and drag AudioKeeper.app to Applications.
+3. Try launching the app. If macOS blocks it, review **System Settings → Privacy & Security**. Only use **Open Anyway** if you trust this release.
 
-> **Security Note:** macOS shows warnings for unsigned apps. This is normal and safe. AudioKeeper is open-source - you can review the code yourself.
+On macOS 15 and later, Control-click is no longer the Gatekeeper override. See [Apple’s explanation](https://developer.apple.com/news/?id=saqachfa).
 
 
 ## 🛠️ Development
@@ -76,7 +58,9 @@ open AudioKeeper.xcodeproj
 # Press Cmd + R in Xcode
 ```
 
-**Requirements:** macOS 13.0+, Xcode 14.0+, Swift 5.7+
+**Runtime:** macOS 13.0+. **Build tools:** Xcode 26+, Swift 6.2+ (Swift 6 mode).
+
+Run `./Scripts/test.sh` for regression checks. See [MAINTENANCE.md](MAINTENANCE.md) for architecture, release checks and hardware testing.
 
 
 ## 🤝 Contributing

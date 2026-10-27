@@ -3,7 +3,7 @@ import CoreAudio
 import AudioToolbox
 import OSLog
 
-struct AudioDeviceInfo: Equatable, Hashable {
+nonisolated struct AudioDeviceInfo: Equatable, Hashable, Sendable {
 	let uid: String
 	let name: String
 	let isInput: Bool
@@ -11,7 +11,7 @@ struct AudioDeviceInfo: Equatable, Hashable {
 	let isAvailable: Bool
 }
 
-enum AudioRole: CustomStringConvertible {
+nonisolated enum AudioRole: Hashable, Sendable, CustomStringConvertible {
 	case input
 	case output
 
@@ -23,10 +23,11 @@ enum AudioRole: CustomStringConvertible {
 	}
 }
 
-enum AudioSwitcherError: Error, CustomStringConvertible {
+nonisolated enum AudioSwitcherError: Error, CustomStringConvertible {
 	case deviceNotFound(uid: String)
 	case setPropertyFailed(status: OSStatus, role: AudioRole)
 	case systemError(OSStatus)
+	case cancelled
 
 	var description: String {
 		switch self {
@@ -36,11 +37,21 @@ enum AudioSwitcherError: Error, CustomStringConvertible {
 			return "Failed to set default \(role) device (status: \(status))"
 		case .systemError(let status):
 			return "CoreAudio system error: \(status)"
+		case .cancelled:
+			return "Audio switching cancelled"
 		}
 	}
 }
 
-final class AudioSwitcher {
+@MainActor
+protocol AudioDeviceSwitching {
+	func listDevices() -> [AudioDeviceInfo]
+	func getDefaultDeviceUID(role: AudioRole) -> String?
+	func setDefaultDevice(uid: String, role: AudioRole) async -> Result<Void, AudioSwitcherError>
+}
+
+@MainActor
+final class AudioSwitcher: AudioDeviceSwitching {
 	static let shared = AudioSwitcher()
 
 	func listDevices() -> [AudioDeviceInfo] {
@@ -93,17 +104,17 @@ final class AudioSwitcher {
 		return getString(deviceID: deviceID, selector: kAudioDevicePropertyDeviceUID)
 	}
 
-	func setDefaultDevice(uid: String, role: AudioRole) -> Result<Void, AudioSwitcherError> {
-		guard let deviceID = deviceID(forUID: uid) else {
-			Logger.audio.warning("Device with UID \(uid) not found")
-			return .failure(.deviceNotFound(uid: uid))
-		}
-
-		// Retry logic: attempt up to 3 times with 1 second delay
+	func setDefaultDevice(uid: String, role: AudioRole) async -> Result<Void, AudioSwitcherError> {
+		// Re-resolve IDs after each suspension: reconnecting devices can get a new ID.
 		let maxAttempts = 3
 		var lastStatus: OSStatus = noErr
 
 		for attempt in 1...maxAttempts {
+			guard !Task.isCancelled else { return .failure(.cancelled) }
+			guard let deviceID = deviceID(forUID: uid),
+			      streamDirectionExists(deviceID: deviceID, scope: role == .input ? kAudioDevicePropertyScopeInput : kAudioDevicePropertyScopeOutput) else {
+				return .failure(.deviceNotFound(uid: uid))
+			}
 			let selector: AudioObjectPropertySelector = (role == .input) ? kAudioHardwarePropertyDefaultInputDevice : kAudioHardwarePropertyDefaultOutputDevice
 			var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
 			var dev = deviceID
@@ -119,7 +130,11 @@ final class AudioSwitcher {
 
 			// Wait before retry (except on last attempt)
 			if attempt < maxAttempts {
-				Thread.sleep(forTimeInterval: 1.0)
+				do {
+					try await Task.sleep(nanoseconds: 1_000_000_000)
+				} catch {
+					return .failure(.cancelled)
+				}
 			}
 		}
 
@@ -164,29 +179,31 @@ final class AudioSwitcher {
 	}
 	
 	private func isValidDevice(_ deviceID: AudioDeviceID) -> Bool {
-		// Check that device is available and not "empty"
+		// A readable UID alone does not mean the device is ready for IO.
 		var address = AudioObjectPropertyAddress(
-			mSelector: kAudioDevicePropertyDeviceUID,
+			mSelector: kAudioDevicePropertyDeviceIsAlive,
 			mScope: kAudioObjectPropertyScopeGlobal,
 			mElement: kAudioObjectPropertyElementMain
 		)
 		
-		var dataSize: UInt32 = 0
-		let status = AudioObjectGetPropertyDataSize(deviceID, &address, 0, nil, &dataSize)
-		return status == noErr && dataSize > 0
+		var isAlive: UInt32 = 0
+		var dataSize = UInt32(MemoryLayout<UInt32>.size)
+		let status = AudioObjectGetPropertyData(deviceID, &address, 0, nil, &dataSize, &isAlive)
+		return status == noErr && isAlive != 0
 	}
 
 	private func getString(deviceID: AudioDeviceID, selector: AudioObjectPropertySelector) -> String? {
 		var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
 		var dataSize: UInt32 = 0
 		guard AudioObjectGetPropertyDataSize(deviceID, &address, 0, nil, &dataSize) == noErr else { return nil }
+		guard dataSize == UInt32(MemoryLayout<Unmanaged<CFString>?>.size) else { return nil }
 
 		var cfString: Unmanaged<CFString>?
 		let status = withUnsafeMutablePointer(to: &cfString) { ptr in
 			AudioObjectGetPropertyData(deviceID, &address, 0, nil, &dataSize, ptr)
 		}
 
-		guard status == noErr, let unwrapped = cfString?.takeUnretainedValue() else { return nil }
+		guard status == noErr, let unwrapped = cfString?.takeRetainedValue() else { return nil }
 		return unwrapped as String
 	}
 

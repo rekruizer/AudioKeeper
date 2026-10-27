@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "🔨 Building AudioKeeper release version..."
 
@@ -27,12 +28,11 @@ xcodebuild -project AudioKeeper.xcodeproj \
            -derivedDataPath build \
            -destination "platform=macOS,arch=arm64" \
            CODE_SIGN_IDENTITY="" \
+           CODE_SIGNING_ALLOWED=NO \
            CODE_SIGN_STYLE=Automatic \
            ENABLE_LOGGING=NO \
            ENABLE_LOGGING_FOR_DEBUGGING=NO \
            XCODE_BUILD_DISABLE_DUPLICATE_OUTPUT_WARNINGS=YES \
-           -allowProvisioningUpdates \
-           -skipMacroValidation \
            clean build
 
 # Check build success
@@ -68,7 +68,7 @@ if [ $? -eq 0 ]; then
         security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
         
         # Sign the app
-        codesign --force --sign "Developer ID Application" AudioKeeper.app
+        codesign --force --sign "Developer ID Application" --entitlements AudioKeeper.entitlements AudioKeeper.app
         
         # Clean up
         rm certificate.p12
@@ -76,18 +76,25 @@ if [ $? -eq 0 ]; then
     else
         echo "🔐 Code signing app with ad-hoc certificate..."
         
-        # Sign with ad-hoc certificate (no real certificate needed)
-        codesign --force --sign "-" AudioKeeper.app
-        
         # Sign all frameworks and libraries inside the app
         find AudioKeeper.app -name "*.framework" -exec codesign --force --sign "-" {} \;
         find AudioKeeper.app -name "*.dylib" -exec codesign --force --sign "-" {} \;
+
+        # Re-signing without entitlements silently removes the sandbox permissions.
+        codesign --force --sign "-" --entitlements AudioKeeper.entitlements AudioKeeper.app
         
         # Remove quarantine attribute to allow execution
         xattr -d com.apple.quarantine AudioKeeper.app 2>/dev/null || true
         
         # Verify the signature
         codesign --verify --verbose AudioKeeper.app
+    fi
+
+    EXPECTED_VERSION="${APP_VERSION:-$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Info.plist)}"
+    BUILT_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' AudioKeeper.app/Contents/Info.plist)
+    if [ "$BUILT_VERSION" != "$EXPECTED_VERSION" ]; then
+        echo "❌ Built version $BUILT_VERSION does not match expected $EXPECTED_VERSION"
+        exit 1
     fi
     
     echo "📦 App ready: AudioKeeper.app"

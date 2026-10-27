@@ -1,0 +1,26 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Regression tests
+        run: ./Scripts/test.sh
+      - name: Build app without signing
+        run: >-
+          xcodebuild -project AudioKeeper.xcodeproj -scheme AudioKeeper
+          -configuration Debug -destination 'generic/platform=macOS'
+          -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
