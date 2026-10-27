@@ -23,10 +23,11 @@ private final class FakeAudioSwitcher: AudioDeviceSwitching {
 
 nonisolated private final class StubURLProtocol: URLProtocol, @unchecked Sendable {
 	nonisolated(unsafe) static var statusCode = 200
+	nonisolated(unsafe) static var version = "99.0.0"
 	override class func canInit(with request: URLRequest) -> Bool { true }
 	override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 	override func startLoading() {
-		let body = Data(#"{"tag_name":"v99.0.0","body":null,"published_at":"2026-10-27T10:00:00Z","assets":[{"name":"AudioKeeper-v99.0.0.dmg","browser_download_url":"https://github.com/rekruizer/AudioKeeper/releases/download/v99.0.0/AudioKeeper-v99.0.0.dmg","size":100}]}"#.utf8)
+		let body = Data(#"{"tag_name":"v99.0.0","body":null,"published_at":"2026-10-27T10:00:00Z","assets":[{"name":"AudioKeeper-v99.0.0.dmg","browser_download_url":"https://github.com/rekruizer/AudioKeeper/releases/download/v99.0.0/AudioKeeper-v99.0.0.dmg","size":100}]}"#.replacingOccurrences(of: "99.0.0", with: Self.version).utf8)
 		let response = HTTPURLResponse(url: request.url!, statusCode: Self.statusCode, httpVersion: nil, headerFields: nil)!
 		client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
 		client?.urlProtocol(self, didLoad: body)
@@ -146,15 +147,39 @@ struct RegressionTests {
 		let session = URLSession(configuration: configuration)
 		defer { session.invalidateAndCancel() }
 		let updater = UpdateManager(session: session, preferencesStore: store)
+		expect(!updater.isUpToDate, "A saved check date must not imply a successful check this session")
+		var completions = 0
 		StubURLProtocol.statusCode = 403
-		updater.checkForUpdates()
+		updater.checkForUpdates {
+			completions += 1
+			expect(!updater.isCheckingForUpdates && updater.lastError != nil, "Manual failure feedback ran before state was ready")
+		}
+		updater.checkForUpdates { preconditionFailure("A duplicate request must not show a second result") }
 		try await eventually { !updater.isCheckingForUpdates }
 		expect(updater.lastError?.contains("403") == true, "HTTP errors not reported")
+		expect(completions == 1 && !updater.isUpToDate, "Failed checks must report failure, not up to date")
 		StubURLProtocol.statusCode = 200
-		updater.checkForUpdates()
+		updater.checkForUpdates {
+			completions += 1
+			expect(!updater.isCheckingForUpdates && updater.updateAvailable != nil && updater.lastError == nil, "Available-update feedback ran before state was ready")
+		}
 		try await eventually { !updater.isCheckingForUpdates }
 		expect(updater.updateAvailable?.version == "99.0.0" && updater.lastError == nil, "Release JSON/nullable body rejected")
 		expect(updater.lastCheckedDate != nil, "Successful check date not saved")
+		expect(!updater.isUpToDate && completions == 2, "An available update must not be reported as up to date")
+		StubURLProtocol.version = "0.0.0"
+		updater.checkForUpdates {
+			completions += 1
+			expect(!updater.isCheckingForUpdates && updater.isUpToDate && updater.lastError == nil, "No-update feedback ran before state was ready")
+		}
+		expect(updater.isCheckingForUpdates && !updater.isUpToDate, "A new check must reset old success feedback")
+		try await eventually { !updater.isCheckingForUpdates }
+		expect(completions == 3 && updater.updateAvailable == nil && updater.isUpToDate, "Missing feedback when no update exists")
+		StubURLProtocol.statusCode = 403
+		updater.checkForUpdates()
+		try await eventually { !updater.isCheckingForUpdates }
+		expect(!updater.isUpToDate, "A failed retry must clear previous success feedback")
+		expect(completions == 3, "Automatic checks must not present manual feedback")
 		print("PASS: version/URL validation and update checks with mocked HTTP; no network or real audio changes")
 	}
 }

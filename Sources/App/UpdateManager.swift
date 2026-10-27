@@ -42,6 +42,7 @@ final class UpdateManager: ObservableObject {
 	static let shared = UpdateManager()
 
 	@Published private(set) var isCheckingForUpdates = false
+	@Published private(set) var isUpToDate = false
 	@Published private(set) var isDownloadingUpdate = false
 	@Published private(set) var updateAvailable: UpdateInfo?
 	@Published private(set) var lastCheckedDate: Date?
@@ -60,13 +61,17 @@ final class UpdateManager: ObservableObject {
 		lastCheckedDate = preferencesStore.load(currentInputUID: nil, currentOutputUID: nil).lastUpdateCheck
 	}
 
-	func checkForUpdates() {
+	func checkForUpdates(completion: (@MainActor () -> Void)? = nil) {
 		guard !isCheckingForUpdates else { return }
 		isCheckingForUpdates = true
+		isUpToDate = false
 		lastError = nil
 
 		Task {
-			defer { isCheckingForUpdates = false }
+			defer {
+				isCheckingForUpdates = false
+				completion?()
+			}
 			do {
 				var request = URLRequest(url: URL(string: "https://api.github.com/repos/rekruizer/AudioKeeper/releases/latest")!)
 				request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
@@ -75,6 +80,7 @@ final class UpdateManager: ObservableObject {
 				let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
 				let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
 				updateAvailable = try processRelease(release, currentVersion: currentVersion)
+				isUpToDate = updateAvailable == nil
 				lastCheckedDate = Date()
 				var preferences = preferencesStore.load(currentInputUID: nil, currentOutputUID: nil)
 				preferences.lastUpdateCheck = lastCheckedDate

@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct AppMenuView: View {
 	@EnvironmentObject var state: AppState
@@ -108,8 +109,14 @@ struct AppMenuView: View {
 						.padding(.vertical, 2)
 					}
 				} else {
+					if updateManager.isUpToDate {
+						Text("You're up to date")
+							.font(.caption)
+							.foregroundColor(.secondary)
+							.padding(.horizontal, 12)
+					}
 					Button("Check for Updates") {
-						updateManager.checkForUpdates()
+						updateManager.checkForUpdates(completion: showUpdateCheckResult)
 					}
 					.buttonStyle(.borderless)
 					.padding(.horizontal, 12)
@@ -152,6 +159,39 @@ struct AppMenuView: View {
 		}
 		.padding(.vertical, 8)
 		.frame(minWidth: 200)
+	}
+
+	private func showUpdateCheckResult() {
+		// Menu actions dismiss the menu, so manual checks need feedback outside it.
+		let alert = NSAlert()
+		if let error = updateManager.lastError {
+			alert.alertStyle = .warning
+			alert.messageText = "Couldn't Check for Updates"
+			alert.informativeText = "\(error)\n\nCheck your connection and try again."
+			alert.addButton(withTitle: "Try Again")
+			alert.addButton(withTitle: "Cancel")
+		} else if let update = updateManager.updateAvailable {
+			alert.messageText = "Update Available"
+			alert.informativeText = "AudioKeeper \(update.version) is available. Download the DMG, then drag AudioKeeper to Applications to install it."
+			alert.addButton(withTitle: "Download Update")
+			alert.addButton(withTitle: "Later")
+		} else {
+			let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+			alert.messageText = "You're Up to Date"
+			alert.informativeText = "AudioKeeper \(version) is the latest available version."
+			alert.addButton(withTitle: "OK")
+		}
+		if #available(macOS 14.0, *) {
+			NSApp.activate()
+		} else {
+			NSApp.activate(ignoringOtherApps: true)
+		}
+		guard alert.runModal() == .alertFirstButtonReturn else { return }
+		if updateManager.lastError != nil {
+			updateManager.checkForUpdates(completion: showUpdateCheckResult)
+		} else if updateManager.updateAvailable != nil {
+			updateManager.downloadAndInstallUpdate()
+		}
 	}
 
 	private func formatDate(_ date: Date) -> String {
